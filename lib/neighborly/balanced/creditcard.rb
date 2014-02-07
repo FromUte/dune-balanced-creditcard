@@ -1,3 +1,4 @@
+require "neighborly/balanced/creditcard/engine"
 require "neighborly/balanced/creditcard/version"
 
 module Neighborly
