@@ -1,24 +1,33 @@
 # Neighborly::Balanced::Creditcard
 
-TODO: Write a gem description
 
-## Installation
+## UNDER ACTIVE DEVELOPMENT
 
-Add this line to your application's Gemfile:
+This won't work for now. Feel free to follow the project and contribute, but it's not ready for production.
 
-    gem 'neighborly-balanced-creditcard'
+## What
 
-And then execute:
+This is an integration between [Balanced](https://www.balancedpayments.com/) and [Neighborly](https://github.com/luminopolis/neighborly), a crowdfunding platform.
 
-    $ bundle
+## How
 
-Or install it yourself as:
+Include this gem as dependency of your project, adding the following line in your `Gemfile`.
 
-    $ gem install neighborly-balanced-creditcard
+```ruby
+# Gemfile
+gem 'neighborly-balanced-creditcard'
+```
 
-## Usage
+Neighborly::Balanced::Creditcard is a Rails Engine, integrating with your (Neighborly) Rails application with very little of effort. To turn the engine on, mount it in an appropriate route:
 
-TODO: Write usage instructions here
+```ruby
+# config/routes.rb
+mount Neighborly::Balanced::Creditcard::Engine => '/', as: 'neighborly_balanced_creditcard'
+```
+
+## Dependencies
+
+This gem has `neighborly-balanced` as dependencie in your Neighbor.ly application.
 
 ## Contributing
 
@@ -27,3 +36,5 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+**to be continued**
