@@ -25,10 +25,6 @@ Neighborly::Balanced::Creditcard is a Rails Engine, integrating with your (Neigh
 mount Neighborly::Balanced::Creditcard::Engine => '/', as: 'neighborly_balanced_creditcard'
 ```
 
-## Dependencies
-
-This gem has `neighborly-balanced` as dependencie in your Neighbor.ly application.
-
 ## Contributing
 
 1. Fork it
