@@ -37,15 +37,21 @@ mount Neighborly::Balanced::Creditcard::Engine => '/', as: 'neighborly_balanced_
 
 We prize for our test suite and coverage, so it would be great if you could run the specs to ensure that your patch is not breaking the existing codebase.
 
-When running specs for the first time, you need to initialize a database for the Neighborly application downloaded to `test/dummy`.
+When running specs for the first time, you'll need to download Neighborly's source code to be tested against your version of the gem. The following command will do this in `test/dummy` folder.
+
+```console
+$ git submodule update
+```
+
+And before you go, you need to initialize a database for this "dummy" app.
 
 ```console
 $ cd test/dummy
 $ RAILS_ENV=test rake db:drop db:create db:migrate
 $ RAILS_ENV=test rake db:seed:development
-$ cd ..
+$ cd ../..
 ```
 
-Yes, we should automate this process.
+(Yes, we should automate this process)
 
 **to be continued**
