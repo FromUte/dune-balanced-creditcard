@@ -1,0 +1,21 @@
+rvm:
+  - 2.1.0
+
+before_install: gem update --remote bundler
+
+before_script:
+  - "git submodule update"
+  - "cd test/dummy"
+  - "cp config/database.sample.yml config/database.yml"
+  - "psql -c 'create role neighborly SUPERUSER LOGIN;' postgres"
+  - "psql -c 'create database neighborly_test;' -U neighborly postgres"
+  - "sh -e /etc/init.d/xvfb start"
+  - "RAILS_ENV=test bundle exec rake db:migrate"
+  - "RAILS_ENV=test bundle exec rake db:seed:development"
+  - "cd ../../"
+
+env:
+  - DISPLAY=:99.0
+
+script:
+  - "bundle exec rspec"
