@@ -4,6 +4,7 @@ rvm:
 before_install: gem update --remote bundler
 
 before_script:
+  - "git submodule init"
   - "git submodule update"
   - "cd test/dummy"
   - "cp config/database.sample.yml config/database.yml"
