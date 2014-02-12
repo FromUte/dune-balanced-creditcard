@@ -28,8 +28,7 @@ mount Neighborly::Balanced::Creditcard::Engine => '/', as: 'neighborly_balanced_
 And install the engine:
 
 ```console
-$ bundle exec rake railties:install:migrations
-$ bundle exec rake db:migrate
+$ bundle exec rake railties:install:migrations db:migrate
 ```
 
 ## Contributing
