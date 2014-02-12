@@ -12,3 +12,6 @@
 //
 //= require_tree .
 
+$(function(){
+  new window.NeighborlyBalancedCreditcard()
+});
