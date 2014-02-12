@@ -1,0 +1,16 @@
+en:
+  neighborly:
+    balanced:
+      creditcard:
+        payments:
+          new:
+            creditcard:
+              title: 'Credit Card Information'
+              subtitle: 'Your card information will be sent securely to our payment processor.'
+            billing:
+              title: 'Billing Information'
+              subtitle: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.'
+            terms: 'By contributing to this project I agree with the %{link}.'
+            terms-link: 'Terms & Conditions of Use'
+            confirm: 'Confirm payment'
+            proccessing: 'Processing...'

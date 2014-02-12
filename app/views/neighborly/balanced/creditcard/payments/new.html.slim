@@ -1,1 +1,44 @@
-h2 #new
+= javascript_include_tag 'neighborly/balanced/creditcard/application'
+
+.neighborly-balanced-creditcard-form
+  = simple_form_for :payment, url: payments_path, html: { class: 'custom' } do |f|
+    .row
+      .large-12.columns.title
+        h4 = t('.creditcard.title')
+        p = t('.creditcard.subtitle')
+
+      .large-12.columns
+        = f.input :card_number
+
+      .large-12.columns
+        - date = Date.today + 1.month
+        .row
+          .large-8.small-8.columns
+            = f.label :expiration
+            .row
+              .large-6.small-6.columns
+                = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month' }
+              .large-6.small-6.columns
+                = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year' }
+
+          .large-4.small-4.columns
+            = f.input :security_code, maxlength: 4
+
+
+      = f.simple_fields_for :user
+        .large-12.columns.title
+          h4 = t('.billing.title')
+          p = t('.billing.subtitle')
+
+        .large-12.columns
+          = f.input :name
+
+
+
+      .large-12.columns.terms
+        = t('.terms', link: link_to(t('.terms-link'), main_app.terms_path(), data: { 'reveal-id' => 'terms-modal', 'reveal-ajax' => true })).html_safe
+
+      .large-12.columns
+        = submit_tag t('.confirm'), class: 'button', data: { disable_with: t('.proccessing') }
+
+  #terms-modal.reveal-modal.small.fixed
