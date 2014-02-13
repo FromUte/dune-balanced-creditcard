@@ -8,9 +8,13 @@ window.NeighborlyBalancedCreditcard = Backbone.View.extend
     this.$button = this.$('input[type=submit]')
     this.$form = this.$('form')
     this.$form.bind('submit', this.submit)
+    this.$('#payment_use_previously_card').bind('change', this.toggleAddNewCard)
 
-  validate: ->
+  validate: =>
 
-  submit: (e)->
+  toggleAddNewCard: =>
+    this.$('.add-new-creditcard-form').toggleClass('hide')
+
+  submit: (e)=>
     e.preventDefault()
 
