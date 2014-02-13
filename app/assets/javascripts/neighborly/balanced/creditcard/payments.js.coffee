@@ -1,4 +1,8 @@
-window.NeighborlyBalancedCreditcard = Backbone.View.extend
+Neighborly.Neighborly.Balanced                     ?= {}
+Neighborly.Neighborly.Balanced.Creditcard          ?= {}
+Neighborly.Neighborly.Balanced.Creditcard.Payments ?= {}
+
+Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
   el: '.neighborly-balanced-creditcard-form'
 
   initialize: ->
