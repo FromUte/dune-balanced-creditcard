@@ -1,1 +1,1 @@
-Balanced.configure(Configuration[:balanced_api_key_secret])
+Balanced.configure(Configuration.fetch(:balanced_api_key_secret))
