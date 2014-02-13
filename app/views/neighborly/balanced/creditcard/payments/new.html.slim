@@ -7,22 +7,23 @@
         h4 = t('.creditcard.title')
         p = t('.creditcard.subtitle')
 
-      .large-12.columns
-        = f.input :card_number
-
-      .large-12.columns
-        - date = Date.today + 1.month
-        .row
-          .large-8.small-8.columns
-            = f.label :expiration
-            .row
-              .large-6.small-6.columns
-                = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month' }
-              .large-6.small-6.columns
-                = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year' }
-
-          .large-4.small-4.columns
-            = f.input :security_code, maxlength: 4
+      - if @customer.cards.any?
+        - card = @customer.cards.last
+        .large-12.columns.use-previously-card
+          .row
+            .large-9.columns
+              h6 = f.input :use_previously_card,  as: :boolean, input_html: { checked: true }, label: t('.use_previously_card')
+            .large-3.columns
+              h6 = t('.cards.expiration')
+          .row
+            .large-12.columns
+              .card
+                .row
+                  .large-1.columns
+                  .large-8.columns
+                    = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
+                  .large-3.columns.expiration
+                    = "#{card.expiration_month}/#{card.expiration_year}"
 
 
       = f.simple_fields_for :user
