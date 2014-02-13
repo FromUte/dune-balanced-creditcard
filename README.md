@@ -25,6 +25,12 @@ Neighborly::Balanced::Creditcard is a Rails Engine, integrating with your (Neigh
 mount Neighborly::Balanced::Creditcard::Engine => '/', as: 'neighborly_balanced_creditcard'
 ```
 
+And load our JavaScript:
+
+```coffeescript
+//= require neighborly-balanced-creditcard
+```
+
 And install the engine:
 
 ```console
