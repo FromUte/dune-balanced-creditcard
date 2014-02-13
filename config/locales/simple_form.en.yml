@@ -1,0 +1,9 @@
+en:
+  simple_form:
+    labels:
+      user:
+        address_street: 'Street Address'
+        address_city: 'City'
+        address_state: 'State'
+        address_zip_code: 'Zip code'
+        update_address: "Update my address on Neighbor.ly's profile."
