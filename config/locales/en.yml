@@ -14,3 +14,6 @@ en:
             terms-link: 'Terms & Conditions of Use'
             confirm: 'Confirm payment'
             proccessing: 'Processing...'
+            cards:
+              use_previously_card: 'Use my previously card'
+              card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'
