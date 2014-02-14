@@ -1,6 +1,6 @@
 = initjs_tag app_name: 'Neighborly', partial: true
 
-.neighborly-balanced-creditcard-form
+.neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-customer-uri=@customer.uri]
   = simple_form_for :payment, url: payments_path, html: { class: 'custom' } do |f|
     .row
       .large-12.columns.title

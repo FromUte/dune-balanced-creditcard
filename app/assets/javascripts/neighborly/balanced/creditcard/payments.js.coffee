@@ -30,10 +30,15 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
   submit: (e)=>
     e.preventDefault()
 
+    root           = $('[data-balanced-credit-card-form]')
+    customerUri    = root.attr('data-customer-uri')
     creditCardData =
-      card_number:      $('#payment_card_number').val()
-      expiration_month: $('#payment_expiration_month').val()
-      expiration_year:  $('#payment_expiration_year').val()
-      security_code:    $('#payment_security_code').val()
+      card_number:      root.find('#payment_card_number').val()
+      expiration_month: root.find('#payment_expiration_month').val()
+      expiration_year:  root.find('#payment_expiration_year').val()
+      security_code:    root.find('#payment_security_code').val()
 
-    balanced.card.create creditCardData, (response)
+    balanced.card.create creditCardData, (response) ->
+      $.post '/balanced/creditcard/users/creditcard',
+        uri:          response.data.uri
+        customer_uri: customerUri
