@@ -6,4 +6,4 @@ en:
         address_city: 'City'
         address_state: 'State'
         address_zip_code: 'Zip code'
-        update_address: "Update my address on Neighbor.ly's profile."
+        update_address: "Update my address on my profile."

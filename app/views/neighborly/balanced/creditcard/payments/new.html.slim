@@ -30,7 +30,7 @@
       .large-12.columns
         .row
           .large-12.columns
-            label.card-box
+            label.card-box[class="#{'new-card' unless @cards.any?}"]
               .row
                 - if @cards.any?
                   .large-1.columns
