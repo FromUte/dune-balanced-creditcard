@@ -15,5 +15,6 @@ en:
             confirm: 'Confirm payment'
             proccessing: 'Processing...'
             cards:
-              use_previously_card: 'Use my previously card'
+              title: 'Credit & Debit Cards'
+              add_new_card: 'Add new Card'
               card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'

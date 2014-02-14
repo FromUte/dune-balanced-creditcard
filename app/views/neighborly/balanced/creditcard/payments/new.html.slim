@@ -7,42 +7,56 @@
         h4 = t('.creditcard.title')
         p = t('.creditcard.subtitle')
 
-      - if @customer.cards.any?
-        - card = @customer.cards.last
-        .large-12.columns.use-previously-card
-          .row
-            .large-9.columns
-              h6 = f.input :use_previously_card,  as: :boolean, input_html: { checked: true }, label: t('.use_previously_card')
-            .large-3.columns
-              h6 = t('.cards.expiration')
-          .row
+      - if @cards.any?
+        .use-previously-card
             .large-12.columns
-              .card
-                .row
-                  .large-1.columns
-                  .large-8.columns
-                    = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
-                  .large-3.columns.expiration
-                    = "#{card.expiration_month}/#{card.expiration_year}"
-
-
-      .add-new-creditcard-form[class="#{'hide' if @customer.cards.any?}"]
-        .large-12.columns
-          = f.input :card_number
-
-        .large-12.columns
-          - date = Date.today + 1.month
-          .row
-            .large-8.small-8.columns
-              = f.label :expiration
               .row
-                .large-6.small-6.columns
-                  = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month' }
-                .large-6.small-6.columns
-                  = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year' }
+                .large-9.columns
+                  h5 = t('.cards.title')
+                .large-3.columns
+                  h6 = t('.cards.expiration')
+            - @cards.reverse_each.with_index do |card,index|
+              .large-12.columns
+                .row
+                  .large-12.columns
+                    label.card-box
+                      .row
+                        .large-1.columns
+                          = f.radio_button :use_card, card.id, { checked: index.zero?, label: false }
+                        .large-8.columns
+                          = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
+                        .large-3.columns.expiration
+                          = "#{card.expiration_month}/#{card.expiration_year}"
+      .large-12.columns
+        .row
+          .large-12.columns
+            label.card-box
+              .row
+                - if @cards.any?
+                  .large-1.columns
+                    = f.radio_button :use_card, 'new', { checked: false, label: false }
+                  .large-8.columns
+                    = t('.add_new_card')
+                  .large-3.columns.expiration
 
-            .large-4.small-4.columns
-              = f.input :security_code, maxlength: 4
+                .large-12.columns.add-new-creditcard-form[class="#{'hide with-others-cards' if @cards.any?}"]
+                  .row
+                    .large-12.columns
+                      = f.input :card_number
+
+                    .large-12.columns
+                      - date = Date.today + 1.month
+                      .row
+                        .large-8.small-8.columns
+                          = f.label :expiration
+                          .row
+                            .large-6.small-6.columns
+                              = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month' }
+                            .large-6.small-6.columns
+                              = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year' }
+
+                        .large-4.small-4.columns
+                          = f.input :security_code, maxlength: 4
 
 
       .user-informations
