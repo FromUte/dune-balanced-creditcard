@@ -9,6 +9,9 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
   initialize: ->
     _.bindAll(this, 'validate', 'submit')
 
+    $.getScript 'https://js.balancedpayments.com/v1/balanced.js', ->
+      balanced.init('/v1/marketplaces/TEST-MP24PC81sknFKEuhffrbAixq')
+
     this.$button = this.$('input[type=submit]')
     this.$form = this.$('form')
     this.$form.bind('submit', this.submit)
@@ -27,3 +30,10 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
   submit: (e)=>
     e.preventDefault()
 
+    creditCardData =
+      card_number:      $('#payment_card_number').val()
+      expiration_month: $('#payment_expiration_month').val()
+      expiration_year:  $('#payment_expiration_year').val()
+      security_code:    $('#payment_security_code').val()
+
+    balanced.card.create creditCardData, (response)
