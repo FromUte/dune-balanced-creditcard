@@ -1,3 +1,0 @@
-[submodule "test/dummy"]
-	path = test/dummy
-	url = https://github.com/luminopolis/neighborly.git
