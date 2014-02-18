@@ -6,7 +6,10 @@ module Neighborly::Balanced::Creditcard
     end
 
     def create
-      customer.add_card(params[:payment].fetch(:use_card))
+      credit_card = params[:payment].fetch(:use_card)
+      unless customer.cards.any? { |c| c.id.eql? credit_card }
+        customer.add_card(params[:payment].fetch(:use_card))
+      end
 
       update_customer
     end
