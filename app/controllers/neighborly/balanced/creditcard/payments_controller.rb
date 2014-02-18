@@ -23,11 +23,13 @@ module Neighborly::Balanced::Creditcard
       # Attach card
       customer = Balanced::Customer.find(params[:payment].fetch(:customer_uri))
       customer.add_card(params[:payment].fetch(:use_card))
+
+      update_customer
     end
 
     private
+
     def update_customer
-      customer          = resource
       customer.name     = params[:payment][:user][:name]
       customer.address  = { line1:        params[:payment][:user][:address_street],
                             city:         params[:payment][:user][:address_city],
@@ -42,7 +44,7 @@ module Neighborly::Balanced::Creditcard
       params.permit(payment: { user: [:address_street, :address_city, :address_state, :address_zip_code] })
     end
 
-    def resource
+    def customer
       @customer ||= Balanced::Customer.find(current_user.balanced_contributor.uri)
     end
   end
