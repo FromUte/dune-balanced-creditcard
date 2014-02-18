@@ -1,7 +1,9 @@
 = initjs_tag app_name: 'Neighborly', partial: true
 
-.neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-customer-uri=@customer.uri]
-  = simple_form_for :payment, url: payments_path, html: { class: 'custom' } do |f|
+.neighborly-balanced-creditcard-form[data-balanced-credit-card-form]
+  = simple_form_for :payment, url: payments_path, html: { class: 'custom', novalidate: '' } do |f|
+    = f.input :use_card,     as: :hidden, input_html: { value: '' }
+    = f.input :customer_uri, as: :hidden, input_html: { value: @customer.uri }
     .row
       .large-12.columns.title
         h4 = t('.creditcard.title')
@@ -42,7 +44,7 @@
                 .large-12.columns.add-new-creditcard-form[class="#{'hide with-others-cards' if @cards.any?}"]
                   .row
                     .large-12.columns
-                      = f.input :card_number
+                      = f.input :card_number, input_html: { 'data-balanced-credit-card-input' => '' }
 
                     .large-12.columns
                       - date = Date.today + 1.month
@@ -51,12 +53,12 @@
                           = f.label :expiration
                           .row
                             .large-6.small-6.columns
-                              = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month' }
+                              = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month', 'data-balanced-credit-card-input' => '' }
                             .large-6.small-6.columns
-                              = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year' }
+                              = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year', 'data-balanced-credit-card-input' => '' }
 
                         .large-4.small-4.columns
-                          = f.input :security_code, maxlength: 4
+                          = f.input :security_code, maxlength: 4, input_html: { 'data-balanced-credit-card-input' => '' }
 
 
       .user-informations

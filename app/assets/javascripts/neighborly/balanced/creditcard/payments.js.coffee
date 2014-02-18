@@ -27,18 +27,19 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
     else
       this.$('.add-new-creditcard-form').addClass('hide')
 
-  submit: (e)=>
-    e.preventDefault()
+  submit: (event) =>
+    selectedCard = this.$('[name="payment[use_card]"]:checked')
+    return if selectedCard.val() != 'new'
 
-    root           = $('[data-balanced-credit-card-form]')
-    customerUri    = root.attr('data-customer-uri')
+    event.preventDefault()
+
     creditCardData =
-      card_number:      root.find('#payment_card_number').val()
-      expiration_month: root.find('#payment_expiration_month').val()
-      expiration_year:  root.find('#payment_expiration_year').val()
-      security_code:    root.find('#payment_security_code').val()
+      card_number:      this.$('#payment_card_number').val()
+      expiration_month: this.$('#payment_expiration_month').val()
+      expiration_year:  this.$('#payment_expiration_year').val()
+      security_code:    this.$('#payment_security_code').val()
+    this.$('[data-balanced-credit-card-input]').val('')
 
     balanced.card.create creditCardData, (response) ->
-      $.post '/balanced/creditcard/users/creditcard',
-        uri:          response.data.uri
-        customer_uri: customerUri
+      selectedCard.val(response.data.uri)
+      $('[data-balanced-credit-card-form] form').submit()
