@@ -16,6 +16,7 @@ module Neighborly::Balanced::Creditcard
         @customer.save
         current_user.create_balanced_contributor(uri: @customer.uri)
       end
+      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
       @cards = @customer.cards
     end
 

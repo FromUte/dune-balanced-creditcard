@@ -10,7 +10,8 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
     _.bindAll(this, 'validate', 'submit')
 
     $.getScript 'https://js.balancedpayments.com/v1/balanced.js', ->
-      balanced.init('/v1/marketplaces/TEST-MP24PC81sknFKEuhffrbAixq')
+      balancedMarketplaceID = $('[data-balanced-credit-card-form]').attr('data-balanced-marketplace-id')
+      balanced.init("/v1/marketplaces/#{balancedMarketplaceID}")
 
     this.$button = this.$('input[type=submit]')
     this.$form = this.$('form')
