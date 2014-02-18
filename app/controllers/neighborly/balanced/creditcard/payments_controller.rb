@@ -1,23 +1,8 @@
 module Neighborly::Balanced::Creditcard
   class PaymentsController < ActionController::Base
     def new
-      if current_user.balanced_contributor
-        @customer = resource
-      else
-        @customer = Balanced::Customer.new(meta:   { user_id: current_user.id },
-                                          name:    current_user.display_name,
-                                          email:   current_user.email,
-                                          address: {
-                                                    line1:        current_user.address_street,
-                                                    city:         current_user.address_city,
-                                                    state:        current_user.address_state,
-                                                    postal_code:  current_user.address_zip_code
-                                                   })
-        @customer.save
-        current_user.create_balanced_contributor(uri: @customer.uri)
-      end
       @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @cards = @customer.cards
+      @cards                   = customer.cards
     end
 
     def create
@@ -46,7 +31,28 @@ module Neighborly::Balanced::Creditcard
     end
 
     def customer
-      @customer ||= Balanced::Customer.find(current_user.balanced_contributor.uri)
+      current_customer_uri = current_user.balanced_contributor.try(:uri)
+      @customer ||= if current_customer_uri
+                      Balanced::Customer.find(current_customer_uri)
+                    else
+                      initialize_customer
+                    end
+    end
+
+    def initialize_customer
+      customer = Balanced::Customer.new(meta:    { user_id: current_user.id },
+                                        name:    current_user.display_name,
+                                        email:   current_user.email,
+                                        address: {
+                                          line1:        current_user.address_street,
+                                          city:         current_user.address_city,
+                                          state:        current_user.address_state,
+                                          postal_code:  current_user.address_zip_code
+                                        })
+      customer.save
+      current_user.create_balanced_contributor(uri: customer.uri)
+
+      customer
     end
   end
 end
