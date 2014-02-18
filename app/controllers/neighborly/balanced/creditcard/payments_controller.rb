@@ -6,8 +6,6 @@ module Neighborly::Balanced::Creditcard
     end
 
     def create
-      # Attach card
-      customer = Balanced::Customer.find(params[:payment].fetch(:customer_uri))
       customer.add_card(params[:payment].fetch(:use_card))
 
       update_customer
