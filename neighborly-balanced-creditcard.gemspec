@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'neighborly-balanced', '~> 0'
 
   spec.add_dependency 'rails'
+  spec.add_dependency 'slim'
   spec.add_development_dependency 'rspec-rails'
-  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency 'sqlite3'
 end

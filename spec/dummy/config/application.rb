@@ -3,7 +3,8 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 Bundler.require(*Rails.groups)
-require "neighborly/balanced/creditcard"
+require 'neighborly/balanced/creditcard'
+require 'slim'
 
 module Dummy
   class Application < Rails::Application
