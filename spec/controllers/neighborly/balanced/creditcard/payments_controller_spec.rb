@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Neighborly::Balanced::Creditcard::PaymentsController do
+  routes { Neighborly::Balanced::Creditcard::Engine.routes }
+
   describe "GET 'new'" do
     let(:current_user) { stub_model(User) }
     before do
