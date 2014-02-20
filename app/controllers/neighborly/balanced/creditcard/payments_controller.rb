@@ -1,8 +1,7 @@
 module Neighborly::Balanced::Creditcard
   class PaymentsController < ActionController::Base
     def new
-      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @cards                   = customer.cards
+      prepare_new_view
     end
 
     def create
@@ -12,16 +11,48 @@ module Neighborly::Balanced::Creditcard
       end
 
       update_customer
+
+      contribution = Contribution.find(params[:payment].fetch(:contribution_id))
+      payment      = Neighborly::Balanced::Payment.new(contribution, resource_params)
+      payment.checkout!
+
+      if payment.successful?
+        flash[:success] = t('success', scope: 'controllers.projects.contributions.pay')
+        redirect_to main_app.project_contribution_path(
+          project_id: contribution.project.id,
+          id:         contribution.id
+        )
+      else
+        prepare_new_view
+        render 'new'
+      end
     end
 
     private
 
+    def resource_params
+      params.require(:payment).
+             permit(:contribution_id,
+                    :use_card,
+                    user: %i(name
+                             address_street
+                             address_city
+                             address_state
+                             address_zip_code
+                             update_address))
+    end
+
+    def prepare_new_view
+      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
+      @cards                   = customer.cards
+    end
+
     def update_customer
-      customer.name     = params[:payment][:user][:name]
-      customer.address  = { line1:        params[:payment][:user][:address_street],
-                            city:         params[:payment][:user][:address_city],
-                            state:        params[:payment][:user][:address_state],
-                            postal_code:  params[:payment][:user][:address_zip_code]
+      customer.name     = resource_params[:user][:name]
+      customer.address  = { line1:        resource_params[:user][:address_street],
+                            city:         resource_params[:user][:address_city],
+                            state:        resource_params[:user][:address_state],
+                            postal_code:  resource_params[:user][:address_zip_code]
                           }
       customer.save
       current_user.update!(user_address_params[:payment][:user]) if params[:payment][:user][:update_address]
