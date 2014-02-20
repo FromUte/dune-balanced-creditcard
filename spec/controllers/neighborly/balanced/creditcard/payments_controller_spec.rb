@@ -53,7 +53,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     let(:params) do
       {
         'payment' => {
-          'use_card'        => 'xxxxx',
+          'use_card'        => '443',
           'contribution_id' => '42',
           'user'            => {}
         },
@@ -70,6 +70,38 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     it "checkouts payment of contribution" do
       Neighborly::Balanced::Payment.any_instance.should_receive(:checkout!)
       post :create, params
+    end
+
+    describe "insertion of card on customer account" do
+      let(:customer) { double('::Balanced::Customer').as_null_object }
+      let(:card) do
+        double('::Balanced::Card', id: params['payment']['use_card'])
+      end
+      before do
+        controller.stub(:customer).and_return(customer)
+      end
+
+      context "customer doesn't have the given card" do
+        before do
+          customer.stub(:cards).and_return([])
+        end
+
+        it "inserts to customer's card list" do
+          expect(customer).to receive(:add_card).with(card.id)
+          post :create, params
+        end
+      end
+
+      context "customer already has the card" do
+        before do
+          customer.stub(:cards).and_return([card])
+        end
+
+        it "skips insertion" do
+          expect(customer).to_not receive(:add_card)
+          post :create, params
+        end
+      end
     end
 
     context "with successul checkout" do

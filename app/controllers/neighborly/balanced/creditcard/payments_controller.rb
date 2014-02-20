@@ -5,11 +5,7 @@ module Neighborly::Balanced::Creditcard
     end
 
     def create
-      credit_card = params[:payment].fetch(:use_card)
-      unless customer.cards.any? { |c| c.id.eql? credit_card }
-        customer.add_card(params[:payment].fetch(:use_card))
-      end
-
+      attach_card_to_customer
       update_customer
 
       contribution = Contribution.find(params[:payment].fetch(:contribution_id))
@@ -42,33 +38,49 @@ module Neighborly::Balanced::Creditcard
                              update_address))
     end
 
+    def user_params
+      resource_params.permit(user: %i(
+                               name
+                               address_street
+                               address_city
+                               address_state
+                               address_zip_code
+                             ))[:user]
+    end
+
     def prepare_new_view
       @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
       @cards                   = customer.cards
     end
 
-    def update_customer
-      customer.name     = resource_params[:user][:name]
-      customer.address  = { line1:        resource_params[:user][:address_street],
-                            city:         resource_params[:user][:address_city],
-                            state:        resource_params[:user][:address_state],
-                            postal_code:  resource_params[:user][:address_zip_code]
-                          }
-      customer.save
-      current_user.update!(user_address_params[:payment][:user]) if params[:payment][:user][:update_address]
+    def attach_card_to_customer
+      credit_card = resource_params.fetch(:use_card)
+      unless customer.cards.any? { |c| c.id.eql? credit_card }
+        customer.add_card(resource_params.fetch(:use_card))
+      end
     end
 
-    def user_address_params
-      params.permit(payment: { user: [:address_street, :address_city, :address_state, :address_zip_code] })
+    def update_customer
+      customer.name    = user_params[:name]
+      customer.address = { line1:        user_params[:address_street],
+                           city:         user_params[:address_city],
+                           state:        user_params[:address_state],
+                           postal_code:  user_params[:address_zip_code]
+                         }
+      customer.save
+
+      if user_params.delete(:update_address)
+        current_user.update!(user_params)
+      end
     end
 
     def customer
       current_customer_uri = current_user.balanced_contributor.try(:uri)
-      @customer ||= if current_customer_uri
-                      ::Balanced::Customer.find(current_customer_uri)
-                    else
-                      initialize_customer
-                    end
+      @customer          ||= if current_customer_uri
+                               ::Balanced::Customer.find(current_customer_uri)
+                             else
+                               initialize_customer
+                             end
     end
 
     def initialize_customer
