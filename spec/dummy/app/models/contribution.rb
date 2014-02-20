@@ -8,6 +8,10 @@ class Contribution
     42
   end
 
+  def price_in_cents(*)
+    50
+  end
+
   def project
     @project ||= Project.new
   end

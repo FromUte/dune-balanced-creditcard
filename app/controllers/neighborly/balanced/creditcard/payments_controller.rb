@@ -9,7 +9,9 @@ module Neighborly::Balanced::Creditcard
       update_customer
 
       contribution = Contribution.find(params[:payment].fetch(:contribution_id))
-      payment      = Neighborly::Balanced::Payment.new(contribution, resource_params)
+      payment      = Neighborly::Balanced::Payment.new(customer,
+                                                       contribution,
+                                                       resource_params)
       payment.checkout!
 
       if payment.successful?
