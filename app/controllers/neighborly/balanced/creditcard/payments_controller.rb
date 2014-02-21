@@ -17,8 +17,8 @@ module Neighborly::Balanced::Creditcard
       if payment.successful?
         flash[:success] = t('success', scope: 'controllers.projects.contributions.pay')
         redirect_to main_app.project_contribution_path(
-          project_id: contribution.project.id,
-          id:         contribution.id
+          contribution.project.permalink,
+          contribution.id
         )
       else
         prepare_new_view

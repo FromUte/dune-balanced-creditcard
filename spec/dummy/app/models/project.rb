@@ -1,5 +1,5 @@
 class Project
-  def id(*)
-    42
+  def permalink(*)
+    'forty-two'
   end
 end

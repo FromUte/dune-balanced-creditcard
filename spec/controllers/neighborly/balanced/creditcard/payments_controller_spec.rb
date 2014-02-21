@@ -128,14 +128,14 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
       end
 
       it "redirects to contribution page" do
-        project      = double('Project', id: 33)
+        project      = double('Project', permalink: 'thirty-three').as_null_object
         contribution = double('Contribution',
                               model_name: 'Contribution',
                               id:         42,
                               project:    project).as_null_object
         Contribution.stub(:find).with('42').and_return(contribution)
         post :create, params
-        expect(response).to redirect_to('/projects/33/contributions/42')
+        expect(response).to redirect_to('/projects/thirty-three/contributions/42')
       end
     end
 
