@@ -47,6 +47,7 @@ module Neighborly::Balanced::Creditcard
                                address_city
                                address_state
                                address_zip_code
+                               update_address
                              ))[:user]
     end
 
@@ -71,7 +72,7 @@ module Neighborly::Balanced::Creditcard
                          }
       customer.save
 
-      if user_params.delete(:update_address)
+      if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include? user_params.delete(:update_address)
         current_user.update!(user_params)
       end
     end

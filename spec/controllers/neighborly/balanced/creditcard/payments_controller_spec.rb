@@ -104,6 +104,22 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
       end
     end
 
+    describe "update of customer attributes" do
+      it "reflects attributes in user's resource when update_address option is checked" do
+        params['payment']['user']['update_address'] = '1'
+
+        expect(current_user).to receive(:update!)
+        post :create, params
+      end
+
+      it "skips update of user's resource when update_address option is not checked" do
+        params['payment']['user']['update_address'] = '0'
+
+        expect(current_user).to_not receive(:update!)
+        post :create, params
+      end
+    end
+
     context "with successul checkout" do
       before do
         Neighborly::Balanced::Payment.any_instance.
