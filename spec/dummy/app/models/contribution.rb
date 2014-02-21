@@ -4,6 +4,8 @@ class Contribution
     new
   end
 
+  def update_attributes(*); end
+
   def id(*)
     42
   end
