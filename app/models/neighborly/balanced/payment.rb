@@ -12,6 +12,10 @@ module Neighborly::Balanced
                                       payment_choice: :creditcard)
     end
 
+    def debit
+      @debit.try(:sanitize)
+    end
+
     def successful?
       %w(pending succeeded).include? @debit.try(:status)
     end
