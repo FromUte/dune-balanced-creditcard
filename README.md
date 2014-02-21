@@ -1,5 +1,7 @@
 # Neighborly::Balanced::Creditcard
 
+[![Build Status](https://travis-ci.org/neighborly/neighborly-balanced-creditcard.png?branch=master)](https://travis-ci.org/neighborly/neighborly-balanced-creditcard) [![Code Climate](https://codeclimate.com/github/neighborly/neighborly-balanced-creditcard.png)](https://codeclimate.com/github/neighborly/neighborly-balanced-creditcard)
+
 
 ## UNDER ACTIVE DEVELOPMENT
 
