@@ -3,7 +3,6 @@
 .neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-balanced-marketplace-id=@balanced_marketplace_id]
   = simple_form_for :payment, url: payments_path, html: { class: 'custom', novalidate: '' } do |f|
     = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
-    = f.input :use_card,        as: :hidden
     .row
       .large-12.columns.title
         h4 = t('.creditcard.title')
@@ -29,6 +28,9 @@
                           = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
                         .large-3.columns.expiration
                           = "#{card.expiration_month}/#{card.expiration_year}"
+      - else
+        = f.input :use_card, as: :hidden
+
       .large-12.columns
         .row
           .large-12.columns

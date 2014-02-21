@@ -29,8 +29,8 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
       this.$('.add-new-creditcard-form').addClass('hide')
 
   submit: (event) =>
-    selectedCard = this.$('[name="payment[use_card]"]:checked')
-    return if selectedCard.val() != 'new'
+    selectedCard = this.$('[name="payment[use_card]"]:checked, [name="payment[use_card]"]:hidden')
+    return if $.inArray(selectedCard.val(), ['new', '']) == -1
 
     event.preventDefault()
 
