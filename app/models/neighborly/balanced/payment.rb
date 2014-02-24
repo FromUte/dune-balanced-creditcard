@@ -7,7 +7,12 @@ module Neighborly::Balanced
     def checkout!
       @debit = @customer.debit(amount: @contribution.price_in_cents,
                                source: @attrs.fetch(:use_card))
-      @contribution.update_attributes(payment_id:     @debit.id,
+    rescue Balanced::PaymentRequired
+      @contribution.cancel!
+    else
+      @contribution.confirm!
+    ensure
+      @contribution.update_attributes(payment_id:     @debit.try(:id),
                                       payment_method: :balanced,
                                       payment_choice: :creditcard)
     end

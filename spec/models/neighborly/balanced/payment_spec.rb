@@ -22,13 +22,41 @@ describe Neighborly::Balanced::Payment do
       subject.checkout!
     end
 
-    describe "Balanced's debit" do
+    context "with successful debit" do
       before { customer.stub(:debit).and_return(debit) }
+
+      it "confirms the contribution" do
+        expect(contribution).to receive(:confirm!)
+        subject.checkout!
+      end
 
       it "defines id as payment id of the contribution" do
         debit.stub(:id).and_return('i-am-an-id!')
         contribution.should_receive(:update_attributes).
                      with(hash_including(payment_id: 'i-am-an-id!'))
+        subject.checkout!
+      end
+
+      it "defines 'balanced' as payment method of the contribution" do
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_method: :balanced))
+        subject.checkout!
+      end
+
+      it "defines 'creditcard' as payment choice of the contribution" do
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_choice: :creditcard))
+        subject.checkout!
+      end
+    end
+
+    context "when raising Balanced::PaymentRequired exception" do
+      before do
+        customer.stub(:debit).and_raise(Balanced::PaymentRequired.new({}))
+      end
+
+      it "cancels the contribution" do
+        expect(contribution).to receive(:cancel!)
         subject.checkout!
       end
 

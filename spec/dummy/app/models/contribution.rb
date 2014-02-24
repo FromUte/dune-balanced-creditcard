@@ -8,6 +8,8 @@ class Contribution
     new
   end
 
+  def cancel!(*);           end
+  def confirm!(*);          end
   def update_attributes(*); end
 
   def id(*)
