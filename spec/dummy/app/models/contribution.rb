@@ -1,6 +1,10 @@
 # Dummy class to be stubbed
 class Contribution
-  def self.find(id)
+  def self.find(*)
+    new
+  end
+
+  def self.find_by(*)
     new
   end
 
