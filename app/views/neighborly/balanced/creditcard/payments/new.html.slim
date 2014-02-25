@@ -3,6 +3,7 @@
 .neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-balanced-marketplace-id=@balanced_marketplace_id]
   = simple_form_for :payment, url: payments_path, html: { class: 'custom', novalidate: '' } do |f|
     = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
+    = f.input :pay_fee, as: :hidden, input_html: { value: 1, 'data-pay-payment-fee' => '' }
     .row
       .large-12.columns.title
         h4 = t('.creditcard.title')
