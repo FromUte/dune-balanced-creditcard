@@ -2,17 +2,44 @@ require 'spec_helper'
 
 describe Neighborly::Balanced::Payment do
   let(:customer)     { double('::Balanced::Customer') }
-  let(:contribution) { double('Contribution', price_in_cents: 1234).as_null_object }
+  let(:contribution) { double('Contribution', value: 1234).as_null_object }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
   let(:attributes)   { { use_card: 'my-new-card' } }
   subject { described_class.new(customer, contribution, attributes) }
 
+  describe "contribution amount in cents" do
+    context "when customer is paying fees" do
+      let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
+
+      it "returns net amount from TransactionAdditionalFeeCalculator" do
+        Neighborly::Balanced::Creditcard::TransactionAdditionalFeeCalculator.
+          any_instance.stub(:net_amount).and_return(15)
+        expect(subject.contribution_amount_in_cents).to eql(1500)
+      end
+    end
+
+    context "when customer is not paying fees" do
+      let(:attributes) { { pay_fee: '0', use_card: 'my-new-card' } }
+
+      it "returns net amount from TransactionInclusiveFeeCalculator" do
+        Neighborly::Balanced::Creditcard::TransactionInclusiveFeeCalculator.
+          any_instance.stub(:net_amount).and_return(10)
+        expect(subject.contribution_amount_in_cents).to eql(1000)
+      end
+    end
+  end
+
   describe "checkout" do
-    it "debits customer with price in cents" do
-      customer.should_receive(:debit).
-               with(hash_including(amount: 1234)).
-               and_return(debit)
-      subject.checkout!
+    context "when customer is paying fees" do
+      let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
+
+      it "debits customer with contribution amount in cents" do
+        subject.stub(:contribution_amount_in_cents).and_return(1000)
+        customer.should_receive(:debit).
+                 with(hash_including(amount: 1000)).
+                 and_return(debit)
+        subject.checkout!
+      end
     end
 
     it "debits customer on selected funding instrument" do

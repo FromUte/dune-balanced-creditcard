@@ -16,7 +16,7 @@ class Contribution
     42
   end
 
-  def price_in_cents(*)
+  def value(*)
     50
   end
 
