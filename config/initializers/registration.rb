@@ -4,7 +4,7 @@ review_path = ->(contribution) do
 end
 
 value_with_fees = ->(value) do
-  Neighborly::Balanced::Creditcard::Fee.new(value).total
+  Neighborly::Balanced::Creditcard::TransactionAdditionalFeeCalculator.new(value).gross_amount
 end
 
 begin
