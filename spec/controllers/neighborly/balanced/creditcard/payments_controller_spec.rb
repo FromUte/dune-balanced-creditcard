@@ -62,7 +62,14 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
 
     it "generates new payment with given params" do
       Neighborly::Balanced::Payment.should_receive(:new).
-                                    with(customer, an_instance_of(Contribution), params['payment']).
+                                    with(anything, customer, an_instance_of(Contribution), params['payment']).
+                                    and_return(double('Payment').as_null_object)
+      post :create, params
+    end
+
+    it "generates new payment with engine's name given" do
+      Neighborly::Balanced::Payment.should_receive(:new).
+                                    with('balanced-creditcard', anything, anything, anything).
                                     and_return(double('Payment').as_null_object)
       post :create, params
     end

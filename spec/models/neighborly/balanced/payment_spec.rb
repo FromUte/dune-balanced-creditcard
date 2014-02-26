@@ -5,7 +5,12 @@ describe Neighborly::Balanced::Payment do
   let(:contribution) { double('Contribution', value: 1234).as_null_object }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
   let(:attributes)   { { use_card: 'my-new-card' } }
-  subject { described_class.new(customer, contribution, attributes) }
+  subject do
+    described_class.new('balanced-creditcard',
+                        customer,
+                        contribution,
+                        attributes)
+  end
 
   describe "contribution amount in cents" do
     context "when customer is paying fees" do
@@ -64,15 +69,9 @@ describe Neighborly::Balanced::Payment do
         subject.checkout!
       end
 
-      it "defines 'balanced' as payment method of the contribution" do
+      it "defines given engine's name as payment method of the contribution" do
         contribution.should_receive(:update_attributes).
-                     with(hash_including(payment_method: :balanced))
-        subject.checkout!
-      end
-
-      it "defines 'creditcard' as payment choice of the contribution" do
-        contribution.should_receive(:update_attributes).
-                     with(hash_including(payment_choice: :creditcard))
+                     with(hash_including(payment_method: 'balanced-creditcard'))
         subject.checkout!
       end
     end
@@ -87,15 +86,9 @@ describe Neighborly::Balanced::Payment do
         subject.checkout!
       end
 
-      it "defines 'balanced' as payment method of the contribution" do
+      it "defines given engine's name as payment method of the contribution" do
         contribution.should_receive(:update_attributes).
-                     with(hash_including(payment_method: :balanced))
-        subject.checkout!
-      end
-
-      it "defines 'creditcard' as payment choice of the contribution" do
-        contribution.should_receive(:update_attributes).
-                     with(hash_including(payment_choice: :creditcard))
+                     with(hash_including(payment_method: 'balanced-creditcard'))
         subject.checkout!
       end
     end

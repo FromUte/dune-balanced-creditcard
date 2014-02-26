@@ -1,7 +1,10 @@
 module Neighborly::Balanced
   class Payment
-    def initialize(customer, contribution, attrs = {})
-      @customer, @contribution, @attrs = customer, contribution, attrs
+    def initialize(engine_name, customer, contribution, attrs = {})
+      @engine_name  = engine_name
+      @customer     = customer
+      @contribution = contribution
+      @attrs        = attrs
     end
 
     def checkout!
@@ -13,8 +16,7 @@ module Neighborly::Balanced
       @contribution.confirm!
     ensure
       @contribution.update_attributes(payment_id:     @debit.try(:id),
-                                      payment_method: :balanced,
-                                      payment_choice: :creditcard)
+                                      payment_method: @engine_name)
     end
 
     def contribution_amount_in_cents
