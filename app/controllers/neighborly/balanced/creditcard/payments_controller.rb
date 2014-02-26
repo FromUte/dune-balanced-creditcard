@@ -32,6 +32,7 @@ module Neighborly::Balanced::Creditcard
       params.require(:payment).
              permit(:contribution_id,
                     :use_card,
+                    :pay_fee,
                     user: %i(name
                              address_street
                              address_city
