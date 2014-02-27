@@ -58,23 +58,28 @@ describe Neighborly::Balanced::Customer do
 
     describe '#update!' do
       describe 'update of user attributes' do
-        context "reflects attributes in user's resource when update_address option is checked" do
+        context "when update_address option is checked" do
           let(:update_address) { '1' }
-          before { expect(user).to receive(:update!) }
-          it { subject.update! }
-
+          it "reflects attributes in user's resource " do
+            expect(user).to receive(:update!)
+            subject.update!
+          end
         end
 
-        context "skips update of user's resource when update_address option is not checked" do
+        context "when update_address option is not checked" do
           let(:update_address) { '0' }
-          before { expect(user).to_not receive(:update!).with {} }
-          it { subject.update! }
+          it "skips update of user's resource" do
+            expect(user).to_not receive(:update!).with {}
+            subject.update!
+          end
         end
       end
 
       describe 'update balanced customer' do
-        before { expect(balanced_customer).to receive(:save) }
-        it { subject.update! }
+        it "balanced_customer should receive save on update" do
+          expect(balanced_customer).to receive(:save)
+          subject.update!
+        end
       end
     end
   end
