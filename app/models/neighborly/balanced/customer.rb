@@ -10,7 +10,7 @@ module Neighborly::Balanced
       @customer          ||= if current_customer_uri
                                ::Balanced::Customer.find(current_customer_uri)
                              else
-                               create_on_balanced
+                               create!
                              end
     end
 
@@ -29,7 +29,7 @@ module Neighborly::Balanced
     end
 
     private
-    def create_on_balanced
+    def create!
       customer = ::Balanced::Customer.new(meta:    { user_id: @user.id },
                                           name:    @user.display_name,
                                           email:   @user.email,
