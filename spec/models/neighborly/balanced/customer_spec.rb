@@ -34,6 +34,7 @@ describe Neighborly::Balanced::Customer do
       end
 
       it 'skips creation of new costumer' do
+        expect(balanced_customer).to_not receive(:save)
         subject.fetch
       end
     end
