@@ -17,35 +17,9 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
   end
 
   describe "GET 'new'" do
-    context "when user already has a balanced_contributor associated" do
-      before do
-        contributor = double('Neighborly::Balanced::Creditcard::Contributor',
-                             uri: '/qwertyuiop')
-        current_user.stub(:balanced_contributor).
-                     and_return(contributor)
-      end
-
-      it "skips creation of new costumer" do
-        customer.should_receive(:save).never
-        get :new, contribution_id: 42
-      end
-    end
-
-    context "when user don't has balanced_contributor associated" do
-      before do
-        current_user.stub(:balanced_contributor)
-      end
-
-      it "saves a new costumer" do
-        customer.should_receive(:save)
-        get :new, contribution_id: 42
-      end
-
-      it "defines user_id in the meta data of the costumer" do
-        customer_attrs = hash_including(meta: hash_including(:user_id))
-        ::Balanced::Customer.should_receive(:new).with(customer_attrs)
-        get :new, contribution_id: 42
-      end
+    it 'should fetch balanced customer' do
+      expect_any_instance_of(Neighborly::Balanced::Customer).to receive(:fetch).and_return(customer)
+      get :new, contribution_id: 42
     end
   end
 
@@ -111,18 +85,9 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
       end
     end
 
-    describe "update of customer attributes" do
-      it "reflects attributes in user's resource when update_address option is checked" do
-        params['payment']['user']['update_address'] = '1'
-
-        expect(current_user).to receive(:update!)
-        post :create, params
-      end
-
-      it "skips update of user's resource when update_address option is not checked" do
-        params['payment']['user']['update_address'] = '0'
-
-        expect(current_user).to_not receive(:update!)
+    describe "update customer" do
+      it "update user attributes and balanced customer" do
+        expect_any_instance_of(Neighborly::Balanced::Customer).to receive(:update!)
         post :create, params
       end
     end
