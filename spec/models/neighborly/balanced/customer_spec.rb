@@ -69,7 +69,7 @@ describe Neighborly::Balanced::Customer do
         context "when update_address option is not checked" do
           let(:update_address) { '0' }
           it "skips update of user's resource" do
-            expect(user).to_not receive(:update!).with {}
+            expect(user).to_not receive(:update!)
             subject.update!
           end
         end
