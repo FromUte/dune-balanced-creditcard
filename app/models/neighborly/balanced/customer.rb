@@ -16,7 +16,7 @@ module Neighborly::Balanced
 
     def update!
       return unless user_params
-      fetch.name    = user_params[:name]
+      fetch.name    = user_params.delete(:name)
       fetch.address = { line1:         user_params[:address_street],
                          city:         user_params[:address_city],
                          state:        user_params[:address_state],
@@ -25,7 +25,7 @@ module Neighborly::Balanced
       fetch.save
 
       if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include? user_params.delete(:update_address)
-        @user.update!(user_params.reject! {| key, value | key == :name })
+        @user.update!(user_params)
       end
     end
 
