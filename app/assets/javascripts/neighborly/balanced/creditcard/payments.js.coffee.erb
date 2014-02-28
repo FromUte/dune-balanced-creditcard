@@ -47,7 +47,7 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
 
     balanced_callback_for_402 = (response) ->
       alertBox     = $('<div>', { 'class': 'row', 'html':
-                       $('<div>', { 'class': 'alert-box large-10 columns large-centered animated fadeIn alert dismissible', 'html':  'The card submitted is invalid.' })
+                       $('<div>', { 'class': 'alert-box large-10 columns large-centered animated fadeIn alert dismissible', 'html': '<%= I18n.t('neighborly.balanced.creditcard.payments.new.errors.card_tokenization_error') %>' })
                      } )
       flashWrapper = $('.flash') || $('body > header').next($('<div>', { 'class': 'flash', 'html' }))
       flashWrapper.append(alertBox)
