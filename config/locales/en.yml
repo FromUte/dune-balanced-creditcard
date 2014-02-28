@@ -18,3 +18,8 @@ en:
               title: 'Credit & Debit Cards'
               add_new_card: 'Add new Card'
               card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'
+            errors:
+              card_tokenization_error: 'The card submitted is invalid.'
+          create:
+            errors:
+              default: "Sorry, something must've gone wrong."
