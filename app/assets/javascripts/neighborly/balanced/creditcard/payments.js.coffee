@@ -51,7 +51,7 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
                      } )
       flashWrapper = $('.flash') || $('body > header').next($('<div>', { 'class': 'flash', 'html' }))
       flashWrapper.append(alertBox)
-      $('.neighborly-balanced-creditcard-form [type="submit"').
+      $('.neighborly-balanced-creditcard-form [type="submit"]').
         removeAttr('disabled').
         removeAttr('data-disable-with').
         attr('value', 'Confirm payment')
