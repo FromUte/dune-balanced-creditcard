@@ -41,6 +41,22 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
       security_code:    this.$('#payment_security_code').val()
     this.$('[data-balanced-credit-card-input]').val('')
 
-    balanced.card.create creditCardData, (response) ->
+    balanced_callback_for_201 = (response) ->
       selectedCard.val(response.data.uri)
       $('[data-balanced-credit-card-form] form').submit()
+
+    balanced_callback_for_402 = (response) ->
+      alertBox     = $('<div>', { 'class': 'row', 'html':
+                       $('<div>', { 'class': 'alert-box large-10 columns large-centered animated fadeIn alert dismissible', 'html':  'The card submitted is invalid.' })
+                     } )
+      flashWrapper = $('.flash') || $('body > header').next($('<div>', { 'class': 'flash', 'html' }))
+      flashWrapper.append(alertBox)
+      $('.neighborly-balanced-creditcard-form [type="submit"').
+        removeAttr('disabled').
+        remoreAttr('data-disable-with').
+        attr('value', 'Confirm payment')
+
+    balanced.card.create creditCardData, (response) ->
+      switch response.status
+        when 201 then balanced_callback_for_201()
+        when 402 then balanced_callback_for_402()
