@@ -50,6 +50,12 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
   end
 
   describe "POST 'create'" do
+    let(:project)      { double('Project', permalink: 'thirty-three').as_null_object }
+    let(:contribution) do
+      double('Contribution', model_name: 'Contribution',
+                             id:         42,
+                             project:    project).as_null_object
+    end
     let(:params) do
       {
         'payment' => {
@@ -135,11 +141,6 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
       end
 
       it "redirects to contribution page" do
-        project      = double('Project', permalink: 'thirty-three').as_null_object
-        contribution = double('Contribution',
-                              model_name: 'Contribution',
-                              id:         42,
-                              project:    project).as_null_object
         Contribution.stub(:find).with('42').and_return(contribution)
         post :create, params
         expect(response).to redirect_to('/projects/thirty-three/contributions/42')
@@ -153,9 +154,10 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
                                       and_return(false)
       end
 
-      it "renders 'new' view" do
+      it "redirects to contribution edit page" do
+        Contribution.stub(:find).with('42').and_return(contribution)
         post :create, params
-        expect(response).to render_template('new')
+        expect(response).to redirect_to('/projects/thirty-three/contributions/42/edit')
       end
     end
   end
