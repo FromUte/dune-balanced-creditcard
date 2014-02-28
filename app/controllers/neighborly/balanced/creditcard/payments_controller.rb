@@ -22,7 +22,7 @@ module Neighborly::Balanced::Creditcard
           contribution.id
         )
       else
-        flash[:alert] = t('title', scope: 'payments.common.error')
+        flash[:alert] = t('.errors.default')
         redirect_to main_app.edit_project_contribution_path(
           contribution.project.permalink,
           contribution.id
