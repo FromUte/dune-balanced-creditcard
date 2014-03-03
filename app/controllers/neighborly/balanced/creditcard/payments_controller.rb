@@ -1,7 +1,8 @@
 module Neighborly::Balanced::Creditcard
   class PaymentsController < ActionController::Base
     def new
-      prepare_new_view
+      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
+      @cards                   = customer.cards
     end
 
     def create
@@ -38,11 +39,6 @@ module Neighborly::Balanced::Creditcard
                     :use_card,
                     :pay_fee,
                     user: {})
-    end
-
-    def prepare_new_view
-      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @cards                   = customer.cards
     end
 
     def attach_card_to_customer
