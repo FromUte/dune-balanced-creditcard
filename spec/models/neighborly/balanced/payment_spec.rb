@@ -35,6 +35,39 @@ describe Neighborly::Balanced::Payment do
   end
 
   describe "checkout" do
+    shared_examples "updates contribution object" do
+      let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
+
+      it "debits customer on selected funding instrument" do
+        customer.should_receive(:debit).
+                 with(hash_including(source: 'my-new-card')).
+                 and_return(debit)
+        subject.checkout!
+      end
+
+      it "defines given engine's name as payment method of the contribution" do
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_method: 'balanced-creditcard'))
+        subject.checkout!
+      end
+
+      it "saves paid fees on contribution object" do
+        calculator = double('FeeCalculator', fees: 0.42).as_null_object
+        subject.stub(:fee_calculator).and_return(calculator)
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_service_fee: 0.42))
+        subject.checkout!
+      end
+
+      it "saves who paid the fees" do
+        calculator = double('FeeCalculator', fees: 0.42).as_null_object
+        subject.stub(:fee_calculator).and_return(calculator)
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_service_fee_paid_by_user: '1'))
+        subject.checkout!
+      end
+    end
+
     context "when customer is paying fees" do
       let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
 
@@ -47,15 +80,10 @@ describe Neighborly::Balanced::Payment do
       end
     end
 
-    it "debits customer on selected funding instrument" do
-      customer.should_receive(:debit).
-               with(hash_including(source: 'my-new-card')).
-               and_return(debit)
-      subject.checkout!
-    end
-
     context "with successful debit" do
       before { customer.stub(:debit).and_return(debit) }
+
+      include_examples "updates contribution object"
 
       it "confirms the contribution" do
         expect(contribution).to receive(:confirm!)
@@ -68,12 +96,6 @@ describe Neighborly::Balanced::Payment do
                      with(hash_including(payment_id: 'i-am-an-id!'))
         subject.checkout!
       end
-
-      it "defines given engine's name as payment method of the contribution" do
-        contribution.should_receive(:update_attributes).
-                     with(hash_including(payment_method: 'balanced-creditcard'))
-        subject.checkout!
-      end
     end
 
     context "when raising Balanced::PaymentRequired exception" do
@@ -81,14 +103,10 @@ describe Neighborly::Balanced::Payment do
         customer.stub(:debit).and_raise(Balanced::PaymentRequired.new({}))
       end
 
+      include_examples "updates contribution object"
+
       it "cancels the contribution" do
         expect(contribution).to receive(:cancel!)
-        subject.checkout!
-      end
-
-      it "defines given engine's name as payment method of the contribution" do
-        contribution.should_receive(:update_attributes).
-                     with(hash_including(payment_method: 'balanced-creditcard'))
         subject.checkout!
       end
     end
