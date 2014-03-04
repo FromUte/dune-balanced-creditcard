@@ -15,8 +15,12 @@ module Neighborly::Balanced
     else
       @contribution.confirm!
     ensure
-      @contribution.update_attributes(payment_id:     @debit.try(:id),
-                                      payment_method: @engine_name)
+      @contribution.update_attributes(
+        payment_id:                       @debit.try(:id),
+        payment_method:                   @engine_name,
+        payment_service_fee:              fee_calculator.fees,
+        payment_service_fee_paid_by_user: @attrs[:pay_fee]
+      )
     end
 
     def contribution_amount_in_cents
