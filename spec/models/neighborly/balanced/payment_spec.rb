@@ -16,9 +16,9 @@ describe Neighborly::Balanced::Payment do
     context "when customer is paying fees" do
       let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
 
-      it "returns net amount from TransactionAdditionalFeeCalculator" do
+      it "returns gross amount from TransactionAdditionalFeeCalculator" do
         Neighborly::Balanced::Creditcard::TransactionAdditionalFeeCalculator.
-          any_instance.stub(:net_amount).and_return(15)
+          any_instance.stub(:gross_amount).and_return(15)
         expect(subject.contribution_amount_in_cents).to eql(1500)
       end
     end
@@ -26,9 +26,9 @@ describe Neighborly::Balanced::Payment do
     context "when customer is not paying fees" do
       let(:attributes) { { pay_fee: '0', use_card: 'my-new-card' } }
 
-      it "returns net amount from TransactionInclusiveFeeCalculator" do
+      it "returns gross amount from TransactionInclusiveFeeCalculator" do
         Neighborly::Balanced::Creditcard::TransactionInclusiveFeeCalculator.
-          any_instance.stub(:net_amount).and_return(10)
+          any_instance.stub(:gross_amount).and_return(10)
         expect(subject.contribution_amount_in_cents).to eql(1000)
       end
     end
