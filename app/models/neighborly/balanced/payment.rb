@@ -24,7 +24,7 @@ module Neighborly::Balanced
     end
 
     def contribution_amount_in_cents
-      (fee_calculator.net_amount * 100).round
+      (fee_calculator.gross_amount * 100).round
     end
 
     def fee_calculator
