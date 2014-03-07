@@ -13,7 +13,7 @@ en:
             confirm: 'Confirm payment'
             proccessing: 'Processing...'
             cards:
-              title: 'Stored Cards'
+              title: 'Stored Credit Cards'
               add_new_card: 'Add new Card'
               card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'
               expiration: 'Expiration:'
