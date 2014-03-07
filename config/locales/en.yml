@@ -18,7 +18,10 @@ en:
               card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'
               expiration: 'Expiration: %{date}'
             errors:
+              invalid_card: 'Your card is invalid.'
+              marketplace_uri: 'Marketplace URI is incorrect, please contact our support.'
               card_tokenization_error: 'The card submitted is invalid.'
+              balanced: 'Balanced did something bad, please retry the request.'
           create:
             errors:
               default: "Sorry, something must've gone wrong."
