@@ -16,12 +16,15 @@
                 .large-12.columns
                   label.card-box
                     .row
-                      .large-1.columns
-                        = f.radio_button :use_card, card.id, { checked: index.zero?, label: false }
-                      .large-7.columns
-                        = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
-                      .large-4.columns.expiration
-                        = t('.cards.expiration', date: "#{card.expiration_month}/#{card.expiration_year}")
+                      dl
+                        .large-1.columns
+                          = f.radio_button :use_card, card.id, { checked: index.zero?, label: false }
+                        .large-6.columns
+                          dt.hide
+                          dd = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
+                        .large-5.columns.expiration
+                          dt = t('.cards.expiration')
+                          dd = "#{card.expiration_month}/#{card.expiration_year}"
 
       - else
         = f.input :use_card, as: :hidden
