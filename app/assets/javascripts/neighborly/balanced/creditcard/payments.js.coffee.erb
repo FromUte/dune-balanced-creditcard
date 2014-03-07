@@ -67,7 +67,7 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
         when 404 then balanced_callback_for_404(response)
         when 500 then balanced_callback_for_500(response)
 
-      unless response.status == 201
+      if response.status != 201
         $.rails.enableFormElements(that.$el)
         $submit = that.$('input[type=submit]')
         $submit.val($submit.data('enable-with'))
