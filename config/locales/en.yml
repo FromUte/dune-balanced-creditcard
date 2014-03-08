@@ -5,7 +5,7 @@ en:
         payments:
           new:
             card:
-              title: 'Stored Credit Cards'
+              title: 'Card Information'
             billing:
               title: 'Billing Information'
             terms: 'By contributing, I agree with the %{link}.'
@@ -13,7 +13,7 @@ en:
             confirm: 'Confirm payment'
             proccessing: 'Processing...'
             cards:
-              title: 'Stored Credit Cards'
+              title: 'Stored Cards'
               add_new_card: 'Add new Card'
               card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'
               expiration: 'Expiration:'
