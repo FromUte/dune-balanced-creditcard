@@ -67,14 +67,14 @@
 
         .row
           .large-6.columns
-            = fu.input :name, input_html: { value: @customer.name }
+            = fu.input :name, required: false, input_html: { value: @customer.name }
           .large-6.columns
-            = fu.input :address_street, input_html: { value: @customer.address.try(:[], :line1) }
+            = fu.input :address_street, required: false, input_html: { value: @customer.address.try(:[], :line1) }
         .row
           .large-5.columns
-            = fu.input :address_city, input_html: { value: @customer.address.try(:[], :city) }
+            = fu.input :address_city, required: false, input_html: { value: @customer.address.try(:[], :city) }
           .large-4.columns
-            = fu.input :address_state, as: :select, collection: State.array, selected: @customer.address.try(:[], :state), include_blank: false
+            = fu.input :address_state, required: false, as: :select, collection: State.array, selected: @customer.address.try(:[], :state), include_blank: false
           .large-3.columns
             = fu.input :address_zip_code, input_html: { value: @customer.address.try(:[], :postal_code) }
 
@@ -84,8 +84,8 @@
           = t('.terms', link: link_to(t('.terms-link'), main_app.terms_path(), data: { 'reveal-id' => 'terms-modal', 'reveal-ajax' => true })).html_safe
 
       .row
-        .large-6.columns
-          = submit_tag t('.confirm'), class: 'button', data: { disable_with: t('.proccessing') }
+        .large-6.columns.submit
+          = f.button :submit, t('.confirm'), data: { disable_with: t('.proccessing'), enable_with: t('.confirm') }
         .large-6.columns.text-right.balanced-seal
           = link_to image_tag('https://balancedpowered.s3.amazonaws.com/secured-1-4.png'), 'https://www.balancedpayments.com/', target: :blank
 
