@@ -4,9 +4,9 @@
   = simple_form_for :payment, url: payments_path, html: { class: 'custom', novalidate: '' } do |f|
     = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
     = f.input :pay_fee, as: :hidden, input_html: { value: 1, 'data-pay-payment-fee' => '' }
-    section.highlighted[class="#{'use-previously-card' if @cards.any?}"]
+    section.highlighted[class="#{'use-existing-item' if @cards.any?}"]
       - if @cards.any?
-        section.use-previously-card.row
+        section.use-existing-item.row
           .large-12.columns.title
             h4 = t('.cards.title')
 
