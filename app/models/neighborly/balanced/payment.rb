@@ -8,8 +8,8 @@ module Neighborly::Balanced
     end
 
     def checkout!
-      @debit = @customer.debit(amount: contribution_amount_in_cents,
-                               source: @attrs.fetch(:use_card))
+      @debit = @customer.debit(amount:     contribution_amount_in_cents,
+                               source_uri: @attrs.fetch(:use_card))
     rescue Balanced::PaymentRequired
       @contribution.cancel!
     else

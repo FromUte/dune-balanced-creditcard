@@ -16,7 +16,7 @@
                 label.row
                   dl
                     .large-1.columns
-                      = f.radio_button :use_card, card.id, { checked: index.zero?, label: false }
+                      = f.radio_button :use_card, card.uri, { checked: index.zero?, label: false }
                     .large-6.columns
                       dt.hide
                       dd = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)

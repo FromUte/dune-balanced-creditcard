@@ -40,7 +40,7 @@ describe Neighborly::Balanced::Payment do
 
       it "debits customer on selected funding instrument" do
         customer.should_receive(:debit).
-                 with(hash_including(source: 'my-new-card')).
+                 with(hash_including(source_uri: 'my-new-card')).
                  and_return(debit)
         subject.checkout!
       end
