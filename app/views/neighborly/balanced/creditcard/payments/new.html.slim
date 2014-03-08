@@ -22,7 +22,7 @@
                       dd = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
                     .large-5.columns.expiration
                       dt = t('.cards.expiration')
-                      dd = sprintf('%02.f/%04.f', card.expiration_month, card.expiration_year)
+                      dd = sprintf('%02i/%i', card.expiration_month, card.expiration_year)
 
       - else
         = f.input :use_card, as: :hidden
