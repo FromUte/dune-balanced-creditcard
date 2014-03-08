@@ -1,4 +1,5 @@
 class Configuration
-  def self.fetch(key)
-  end
+  def self.[](*);    end
+
+  def self.fetch(*); end
 end
