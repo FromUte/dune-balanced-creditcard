@@ -14,14 +14,14 @@ en:
             proccessing: 'Processing...'
             cards:
               title: 'Stored Cards'
-              add_new_card: 'Add new Card'
+              add_new_card: 'Add a new card'
               card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'
               expiration: 'Expiration:'
             errors:
               invalid_card: 'Sorry, card error. Please review and try again.'
-              marketplace_uri: 'Marketplace URI is incorrect, please contact our support.'
+              marketplace_uri: 'Balanced URI is incorrect, please contact support.'
               card_tokenization_error: 'Sorry, card error. Please review and try again.'
-              balanced: 'Balanced did something bad, please retry the request.'
+              balanced: 'Sorry, something went wrong on our end. Please try again.'
           create:
             errors:
-              default: "Sorry, something must've gone wrong."
+              default: "Sorry, something must've gone wrong. Please try again."
