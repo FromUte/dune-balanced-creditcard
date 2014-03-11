@@ -12,13 +12,18 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
-
+    controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
   end
 
   describe "GET 'new'" do
     it 'should fetch balanced customer' do
       expect_any_instance_of(Neighborly::Balanced::Customer).to receive(:fetch).and_return(customer)
+      get :new, contribution_id: 42
+    end
+
+    it 'should receive authenticate_user!' do
+      expect(controller).to receive(:authenticate_user!)
       get :new, contribution_id: 42
     end
   end
@@ -38,6 +43,11 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
           'user'            => {}
         },
       }
+    end
+
+    it 'should receive authenticate_user!' do
+      expect(controller).to receive(:authenticate_user!)
+      post :create, params
     end
 
     it "generates new payment with given params" do
