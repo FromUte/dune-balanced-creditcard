@@ -7,7 +7,7 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
   el: '.neighborly-balanced-creditcard-form'
 
   initialize: ->
-    _.bindAll(this, 'submit', 'submitToBalanced', 'toggleAddNewCard', 'fixFoundationRadio')
+    _.bindAll(this, 'submit', 'submitToBalanced', 'toggleAddNewCard', 'toggleSelected')
     this.Flash = Neighborly.Neighborly.Balanced.Creditcard.Flash
 
     $.getScript 'https://js.balancedpayments.com/v1/balanced.js', ->
@@ -17,7 +17,8 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
     this.$button = this.$('input[type=submit]')
     this.$('form').bind('submit', this.submit)
     this.$('input[type=radio]').bind('change', this.toggleAddNewCard)
-    this.$('input[type=radio]').bind('change', this.fixFoundationRadio)
+    this.$('input[type=radio]').bind('change', this.toggleSelected)
+    this.toggleSelected()
 
   submit: (event) ->
     selectedCard = this.$('[name="payment[use_card]"]:checked, [name="payment[use_card]"]:hidden')
@@ -72,9 +73,9 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
         $submit = that.$('input[type=submit]')
         $submit.val($submit.data('enable-with'))
 
-  fixFoundationRadio: ->
-    this.$('.radio.checked').removeClass('checked')
-    this.$('input[type=radio]:checked ~ .radio').addClass('checked')
+  toggleSelected: ->
+    this.$('.card-box').removeClass('selected')
+    this.$('input[type=radio]:checked').parents('.card-box').addClass('selected')
 
   toggleAddNewCard: ->
     if this.$('#payment_use_card_new').is(':checked')
