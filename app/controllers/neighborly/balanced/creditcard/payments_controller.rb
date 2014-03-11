@@ -1,5 +1,7 @@
 module Neighborly::Balanced::Creditcard
   class PaymentsController < ActionController::Base
+    before_filter :authenticate_user!
+
     def new
       @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
       @cards                   = customer.cards
