@@ -1,7 +1,7 @@
 = initjs_tag app_name: 'Neighborly', partial: true
 
 .neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-balanced-marketplace-id=@balanced_marketplace_id]
-  = simple_form_for :payment, url: payments_path, html: { class: 'custom', novalidate: '' } do |f|
+  = simple_form_for :payment, url: payments_path, html: { novalidate: '' } do |f|
     = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
     = f.input :pay_fee, as: :hidden, input_html: { value: 1, 'data-pay-payment-fee' => '' }
     section.highlighted[class="#{'use-existing-item' if @cards.any?}"]
@@ -53,9 +53,11 @@
                 .large-5.columns
                   - date = Date.today + 1.month
                   = f.label :expiration
-                  .row
-                    .large-6.small-6.columns
+                  .row.collapse
+                    .large-5.small-5.columns
                       = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month', 'data-balanced-credit-card-input' => '' }
+                    .large-1.small-1.columns.text-center.divider
+                      | /
                     .large-6.small-6.columns
                       = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year', 'data-balanced-credit-card-input' => '' }
 
