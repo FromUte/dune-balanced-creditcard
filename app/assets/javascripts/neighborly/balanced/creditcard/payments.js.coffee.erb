@@ -39,6 +39,9 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
       expiration_month: this.$('#payment_expiration_month').val()
       expiration_year:  this.$('#payment_expiration_year').val()
       security_code:    this.$('#payment_security_code').val()
+      name:             this.$('#payment_user_name').val()
+      postal_code:      this.$('#payment_user_address_zip_code').val()
+      country_code:     'USA'
 
     balanced_callback_for_201 = (response) ->
       selectedCard.val(response.data.uri)
