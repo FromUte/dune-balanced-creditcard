@@ -8,7 +8,7 @@ value_with_fees = ->(value) do
 end
 
 begin
-  PaymentEngines.register(name:            'balanced-creditcard',
+  PaymentEngine.register(name:             'balanced-creditcard',
                           locale:          'en',
                           value_with_fees: value_with_fees,
                           review_path:     review_path)
