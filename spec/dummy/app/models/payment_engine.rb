@@ -1,5 +1,5 @@
 # Dummy class to be stubbed
-class PaymentEngines
+class PaymentEngine
   def self.register(*);                    end
   def self.create_payment_notification(*); end
 end
