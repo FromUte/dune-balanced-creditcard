@@ -20,7 +20,7 @@ Neighborly::Balanced::Creditcard is a Rails Engine, integrating with your (Neigh
 
 ```ruby
 # config/routes.rb
-mount Neighborly::Balanced::Creditcard::Engine => '/', as: 'neighborly_balanced_creditcard'
+mount Neighborly::Balanced::Creditcard::Engine => '/balanced/creditcard/', as: :neighborly_balanced_creditcard
 ```
 
 And load our JavaScript:
