@@ -55,11 +55,11 @@
                   = f.label :expiration
                   .row.collapse
                     .large-5.small-5.columns
-                      = f.select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month', 'data-balanced-credit-card-input' => '' }
+                      = select_month date, { use_two_digit_numbers: true }, { name: 'payment[expiration_month]', id: 'payment_expiration_month', 'data-balanced-credit-card-input' => '' }
                     .large-1.small-1.columns.text-center.divider
                       | /
                     .large-6.small-6.columns
-                      = f.select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year', 'data-balanced-credit-card-input' => '' }
+                      = select_year date, { start_year: date.year, end_year: date.year+15 }, { name: 'payment[expiration_year]', id: 'payment_expiration_year', 'data-balanced-credit-card-input' => '' }
 
     section.user-informations.highlighted
       = f.simple_fields_for :user do |fu|
