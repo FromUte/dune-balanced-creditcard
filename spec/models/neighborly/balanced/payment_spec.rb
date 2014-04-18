@@ -96,6 +96,18 @@ describe Neighborly::Balanced::Payment do
                      with(hash_including(payment_id: 'i-am-an-id!'))
         subject.checkout!
       end
+
+      context 'when a appears_on_statement_as is provided to debit' do
+        it 'defines appears_on_statement_as on debit' do
+          ::Configuration.stub(:[]).with(:balanced_appears_on_statement_as).
+            and_return('Neighbor.ly')
+
+          customer.should_receive(:debit).
+                   with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
+                   and_return(debit)
+          subject.checkout!
+        end
+      end
     end
 
     context "when raising Balanced::PaymentRequired exception" do
