@@ -10,7 +10,8 @@ module Neighborly::Balanced
     def checkout!
       @debit = @customer.debit(amount:     contribution_amount_in_cents,
                                source_uri: @attrs.fetch(:use_card),
-                               appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as])
+                               appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
+                               description: debit_description)
     rescue Balanced::PaymentRequired
       @contribution.cancel!
     else
@@ -46,6 +47,12 @@ module Neighborly::Balanced
 
     def successful?
       %w(pending succeeded).include? @debit.try(:status)
+    end
+
+    private
+    def debit_description
+      I18n.t('neighborly.balanced.creditcard.payments.dedit.description',
+             project_name: @contribution.try(:project).try(:name))
     end
   end
 end

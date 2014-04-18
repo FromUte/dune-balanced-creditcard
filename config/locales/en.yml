@@ -3,6 +3,8 @@ en:
     balanced:
       creditcard:
         payments:
+          dedit:
+            description: 'Contribution to %{project_name}'
           new:
             card:
               title: 'Card Information'
