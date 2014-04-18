@@ -90,7 +90,7 @@ describe Neighborly::Balanced::Payment do
         subject.checkout!
       end
 
-      it "defines id as payment id of the contribution" do
+      it 'defines id as payment id of the contribution' do
         debit.stub(:id).and_return('i-am-an-id!')
         contribution.should_receive(:update_attributes).
                      with(hash_including(payment_id: 'i-am-an-id!'))
@@ -104,6 +104,16 @@ describe Neighborly::Balanced::Payment do
 
           customer.should_receive(:debit).
                    with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
+                   and_return(debit)
+          subject.checkout!
+        end
+      end
+
+      context 'when a description is provided to debit' do
+        it 'defines description on debit' do
+          contribution.stub_chain(:project, :name).and_return('Awesome Project')
+          customer.should_receive(:debit).
+                   with(hash_including(description: 'Contribution to Awesome Project')).
                    and_return(debit)
           subject.checkout!
         end
