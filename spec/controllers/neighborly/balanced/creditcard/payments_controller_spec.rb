@@ -49,7 +49,6 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     before do
       Neighborly::Balanced::Payment.any_instance.stub(:project_owner_customer).
         and_return(double('::Balanced::Customer', uri: 'project-owner-uri'))
-
     end
 
     it 'should receive authenticate_user!' do
