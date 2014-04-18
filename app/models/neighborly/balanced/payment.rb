@@ -11,7 +11,8 @@ module Neighborly::Balanced
       @debit = @customer.debit(amount:     contribution_amount_in_cents,
                                source_uri: @attrs.fetch(:use_card),
                                appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
-                               description: debit_description)
+                               description: debit_description,
+                               on_behalf_of_uri: project_owner_customer.uri)
     rescue Balanced::PaymentRequired
       @contribution.cancel!
     else
@@ -53,6 +54,11 @@ module Neighborly::Balanced
     def debit_description
       I18n.t('neighborly.balanced.creditcard.payments.dedit.description',
              project_name: @contribution.try(:project).try(:name))
+    end
+
+    def project_owner_customer
+      @project_owner_customer ||= Neighborly::Balanced::Customer.new(
+        @contribution.project.user, {}).fetch
     end
   end
 end

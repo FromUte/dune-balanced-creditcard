@@ -5,11 +5,21 @@ describe Neighborly::Balanced::Payment do
   let(:contribution) { double('Contribution', value: 1234).as_null_object }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
   let(:attributes)   { { use_card: 'my-new-card' } }
+  let(:project_owner_customer) do
+    double('::Balanced::Customer', uri: 'project-owner-uri')
+  end
+
   subject do
     described_class.new('balanced-creditcard',
                         customer,
                         contribution,
                         attributes)
+  end
+
+  before do
+    ::Balanced::Customer.stub(:find).and_return(project_owner_customer)
+    contribution.stub_chain(:project, :user, :balanced_contributor).and_return(
+      double('BalancedContributor', uri: 'project-owner-uri'))
   end
 
   describe "contribution amount in cents" do
@@ -97,26 +107,29 @@ describe Neighborly::Balanced::Payment do
         subject.checkout!
       end
 
-      context 'when a appears_on_statement_as is provided to debit' do
-        it 'defines appears_on_statement_as on debit' do
-          ::Configuration.stub(:[]).with(:balanced_appears_on_statement_as).
-            and_return('Neighbor.ly')
+      it 'defines appears_on_statement_as on debit' do
+        ::Configuration.stub(:[]).with(:balanced_appears_on_statement_as).
+          and_return('Neighbor.ly')
 
-          customer.should_receive(:debit).
-                   with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
-                   and_return(debit)
-          subject.checkout!
-        end
+        customer.should_receive(:debit).
+                 with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
+                 and_return(debit)
+        subject.checkout!
       end
 
-      context 'when a description is provided to debit' do
-        it 'defines description on debit' do
-          contribution.stub_chain(:project, :name).and_return('Awesome Project')
-          customer.should_receive(:debit).
-                   with(hash_including(description: 'Contribution to Awesome Project')).
-                   and_return(debit)
-          subject.checkout!
-        end
+      it 'defines description on debit' do
+        contribution.stub_chain(:project, :name).and_return('Awesome Project')
+        customer.should_receive(:debit).
+                 with(hash_including(description: 'Contribution to Awesome Project')).
+                 and_return(debit)
+        subject.checkout!
+      end
+
+      it 'defines on_behalf_of_uri on debit' do
+        customer.should_receive(:debit).
+                 with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
+                 and_return(debit)
+        subject.checkout!
       end
     end
 
