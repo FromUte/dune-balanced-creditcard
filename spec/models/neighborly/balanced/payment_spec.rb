@@ -39,8 +39,13 @@ describe Neighborly::Balanced::Payment do
       let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
 
       it "debits customer on selected funding instrument" do
+        #Stubs ::Configuration[:balanced_appears_on_statement_as])
+        ::Configuration.stub(:[]).
+          and_return('Neighbor.ly')
+
         customer.should_receive(:debit).
-                 with(hash_including(source_uri: 'my-new-card')).
+                 with(hash_including(source_uri: 'my-new-card',
+                                     appears_on_statement_as: 'Neighbor.ly')).
                  and_return(debit)
         subject.checkout!
       end
