@@ -14,6 +14,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     ::Balanced::Customer.stub(:new).and_return(customer)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
+    Neighborly::Balanced::Payment.any_instance.stub(:meta).and_return({})
   end
 
   describe "GET 'new'" do
@@ -29,7 +30,8 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
   end
 
   describe "POST 'create'" do
-    let(:project)      { double('Project', permalink: 'thirty-three').as_null_object }
+    let(:user)         { double('User', balanced_contributor: double('BalancedContributor', uri: 'project-owner-uri')) }
+    let(:project)      { double('Project', permalink: 'thirty-three', user: user).as_null_object }
     let(:contribution) do
       double('Contribution', model_name: 'Contribution',
                              id:         42,
@@ -43,6 +45,11 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
           'user'            => {}
         },
       }
+    end
+
+    before do
+      Neighborly::Balanced::Payment.any_instance.stub(:project_owner_customer).
+        and_return(double('::Balanced::Customer', uri: 'project-owner-uri'))
     end
 
     it 'should receive authenticate_user!' do
