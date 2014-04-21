@@ -20,6 +20,8 @@ describe Neighborly::Balanced::Payment do
     ::Balanced::Customer.stub(:find).and_return(project_owner_customer)
     contribution.stub_chain(:project, :user, :balanced_contributor).and_return(
       double('BalancedContributor', uri: 'project-owner-uri'))
+
+    described_class.any_instance.stub(:meta).and_return({})
   end
 
   describe "contribution amount in cents" do
@@ -128,6 +130,14 @@ describe Neighborly::Balanced::Payment do
       it 'defines on_behalf_of_uri on debit' do
         customer.should_receive(:debit).
                  with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
+                 and_return(debit)
+        subject.checkout!
+      end
+
+      it 'defines meta on debit' do
+        described_class.any_instance.stub(:meta).and_return({ payment_service_fee: 5.0 })
+        customer.should_receive(:debit).
+                 with(hash_including(meta: { payment_service_fee: 5.0 })).
                  and_return(debit)
         subject.checkout!
       end

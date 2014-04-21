@@ -12,7 +12,8 @@ module Neighborly::Balanced
                                source_uri: @attrs.fetch(:use_card),
                                appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
                                description: debit_description,
-                               on_behalf_of_uri: project_owner_customer.uri)
+                               on_behalf_of_uri: project_owner_customer.uri,
+                               meta: meta)
     rescue Balanced::PaymentRequired
       @contribution.cancel!
     else
@@ -59,6 +60,34 @@ module Neighborly::Balanced
     def project_owner_customer
       @project_owner_customer ||= Neighborly::Balanced::Customer.new(
         @contribution.project.user, {}).fetch
+    end
+
+    def meta
+      {
+        payment_service_fee: fee_calculator.fees,
+        payment_service_fee_paid_by_user: @attrs[:pay_fee],
+        project: {
+          id:        @contribution.project.id,
+          name:      @contribution.project.name,
+          permalink: @contribution.project.permalink,
+          user:      @contribution.project.user.id
+        },
+        user: {
+          id:        @contribution.user.id,
+          name:      @contribution.user.display_name,
+          email:     @contribution.user.email,
+          address:   { line1:        @contribution.user.address_street,
+                       city:         @contribution.user.address_city,
+                       state:        @contribution.user.address_state,
+                       postal_code:  @contribution.user.address_zip_code
+          }
+        },
+        reward: {
+          id:          @contribution.reward.try(:id),
+          title:       @contribution.reward.try(:title),
+          description: @contribution.reward.try(:description)
+        }
+      }
     end
   end
 end
