@@ -54,6 +54,10 @@ module Neighborly::Balanced::Creditcard
     end
 
     private
+    def resource_name
+      resource.class.name.downcase
+    end
+
     def debit_description
       I18n.t('neighborly.balanced.creditcard.payments.dedit.description',
              project_name: resource.try(:project).try(:name))
