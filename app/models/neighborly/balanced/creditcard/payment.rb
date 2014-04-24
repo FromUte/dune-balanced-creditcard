@@ -1,4 +1,4 @@
-module Neighborly::Balanced
+module Neighborly::Balanced::Creditcard
   class Payment
     def initialize(engine_name, customer, contribution, attrs = {})
       @engine_name  = engine_name
@@ -35,9 +35,9 @@ module Neighborly::Balanced
       @fee_calculator and return @fee_calculator
 
       calculator_class = if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include? @attrs[:pay_fee]
-                           Creditcard::TransactionAdditionalFeeCalculator
+                           TransactionAdditionalFeeCalculator
                          else
-                           Creditcard::TransactionInclusiveFeeCalculator
+                           TransactionInclusiveFeeCalculator
                          end
 
       @fee_calculator = calculator_class.new(@contribution.value)

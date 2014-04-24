@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Neighborly::Balanced::Payment do
+describe Neighborly::Balanced::Creditcard::Payment do
   let(:customer)     { double('::Balanced::Customer') }
   let(:contribution) { double('Contribution', value: 1234).as_null_object }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
