@@ -11,28 +11,41 @@ module Neighborly::Balanced::Creditcard
       attach_card_to_customer
       update_customer
 
-      contribution = Contribution.find(params[:payment].fetch(:contribution_id))
-      payment      = Neighborly::Balanced::Creditcard::Payment.new('balanced-creditcard',
-                                                       customer,
-                                                       contribution,
-                                                       resource_params)
+      payment = Payment.new('balanced-creditcard',
+                             customer,
+                             resource,
+                             resource_params)
       payment.checkout!
-
-      if payment.successful?
-        redirect_to main_app.project_contribution_path(
-          contribution.project.permalink,
-          contribution.id
-        )
-      else
-        flash[:alert] = t('.errors.default')
-        redirect_to main_app.edit_project_contribution_path(
-          contribution.project.permalink,
-          contribution.id
-        )
-      end
+      complete_request_with(resource, payment.successful?)
     end
 
     private
+
+    def resource
+      @resource ||= Contribution.find(params[:payment].fetch(:contribution_id))
+    end
+
+    def complete_request_with(resource, success)
+      status = success ? :success : :fail
+      {
+        contribution: {
+          success: -> do
+            redirect_to main_app.project_contribution_path(
+              resource.project.permalink,
+              resource.id
+            )
+          end,
+
+          fail: -> do
+            flash.alert = t('.errors.default')
+            redirect_to main_app.edit_project_contribution_path(
+              resource.project.permalink,
+              resource.id
+            )
+          end
+        }
+      }.fetch(resource.class.name.downcase.to_sym).fetch(status).call
+    end
 
     def resource_params
       params.require(:payment).
