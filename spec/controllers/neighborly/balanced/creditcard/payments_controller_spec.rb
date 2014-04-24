@@ -33,7 +33,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     let(:user)         { double('User', balanced_contributor: double('BalancedContributor', uri: 'project-owner-uri')) }
     let(:project)      { double('Project', permalink: 'thirty-three', user: user).as_null_object }
     let(:contribution) do
-      double('Contribution', model_name: 'Contribution',
+      mock_model('Contribution', model_name: 'Contribution',
                              id:         42,
                              project:    project).as_null_object
     end
