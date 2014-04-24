@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Neighborly::Balanced::Creditcard::Payment do
   let(:customer)     { double('::Balanced::Customer') }
-  let(:contribution) { double('Contribution', value: 1234).as_null_object }
+  let(:contribution) { mock_model('Contribution', value: 1234).as_null_object }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
   let(:attributes)   { { use_card: 'my-new-card' } }
   let(:project_owner_customer) do

@@ -4,7 +4,8 @@ en:
       creditcard:
         payments:
           dedit:
-            description: 'Contribution to %{project_name}'
+            contribution:
+              description: 'Contribution to %{project_name}'
           new:
             card:
               title: 'Card Information'

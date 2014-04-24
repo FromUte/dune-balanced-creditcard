@@ -59,8 +59,9 @@ module Neighborly::Balanced::Creditcard
     end
 
     def debit_description
-      I18n.t('neighborly.balanced.creditcard.payments.dedit.description',
-             project_name: resource.try(:project).try(:name))
+      I18n.t('description',
+             project_name: resource.try(:project).try(:name),
+             scope: "neighborly.balanced.creditcard.payments.dedit.#{resource_name}")
     end
 
     def project_owner_customer
