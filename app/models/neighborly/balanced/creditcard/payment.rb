@@ -70,31 +70,42 @@ module Neighborly::Balanced::Creditcard
     end
 
     def meta
-      {
-        payment_service_fee: fee_calculator.fees,
-        payment_service_fee_paid_by_user: attrs[:pay_fee],
-        project: {
-          id:        resource.project.id,
-          name:      resource.project.name,
-          permalink: resource.project.permalink,
-          user:      resource.project.user.id
-        },
-        user: {
-          id:        resource.user.id,
-          name:      resource.user.display_name,
-          email:     resource.user.email,
-          address:   { line1:        resource.user.address_street,
-                       city:         resource.user.address_city,
-                       state:        resource.user.address_state,
-                       postal_code:  resource.user.address_zip_code
-          }
-        },
-        reward: {
-          id:          resource.reward.try(:id),
-          title:       resource.reward.try(:title),
-          description: resource.reward.try(:description)
-        }
-      }
+      meta = {
+              payment_service_fee: fee_calculator.fees,
+              payment_service_fee_paid_by_user: attrs[:pay_fee],
+              project: {
+                id:        resource.project.id,
+                name:      resource.project.name,
+                permalink: resource.project.permalink,
+                user:      resource.project.user.id
+              },
+              user: {
+                id:        resource.user.id,
+                name:      resource.user.display_name,
+                email:     resource.user.email,
+                address:   { line1:        resource.user.address_street,
+                             city:         resource.user.address_city,
+                             state:        resource.user.address_state,
+                             postal_code:  resource.user.address_zip_code
+                }
+              },
+              reward: {
+                id:          resource.reward.try(:id),
+                title:       resource.reward.try(:title),
+                description: resource.reward.try(:description)
+              }
+            }
+      if resource_name == 'contribution'
+        meta.merge!({
+          reward: {
+                id:          resource.reward.try(:id),
+                title:       resource.reward.try(:title),
+                description: resource.reward.try(:description)
+              }
+          })
+      end
+
+      meta
     end
   end
 end
