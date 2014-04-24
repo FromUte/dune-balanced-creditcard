@@ -1,5 +1,7 @@
 # Dummy class to be stubbed
 class Contribution
+  extend ActiveModel::Naming
+
   def self.find(*)
     new
   end
