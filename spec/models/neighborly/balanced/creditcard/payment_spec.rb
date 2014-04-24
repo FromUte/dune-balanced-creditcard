@@ -31,7 +31,7 @@ describe Neighborly::Balanced::Creditcard::Payment do
       it "returns gross amount from TransactionAdditionalFeeCalculator" do
         Neighborly::Balanced::Creditcard::TransactionAdditionalFeeCalculator.
           any_instance.stub(:gross_amount).and_return(15)
-        expect(subject.contribution_amount_in_cents).to eql(1500)
+        expect(subject.amount_in_cents).to eql(1500)
       end
     end
 
@@ -41,7 +41,7 @@ describe Neighborly::Balanced::Creditcard::Payment do
       it "returns gross amount from TransactionInclusiveFeeCalculator" do
         Neighborly::Balanced::Creditcard::TransactionInclusiveFeeCalculator.
           any_instance.stub(:gross_amount).and_return(10)
-        expect(subject.contribution_amount_in_cents).to eql(1000)
+        expect(subject.amount_in_cents).to eql(1000)
       end
     end
   end
@@ -84,7 +84,7 @@ describe Neighborly::Balanced::Creditcard::Payment do
       let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
 
       it "debits customer with contribution amount in cents" do
-        subject.stub(:contribution_amount_in_cents).and_return(1000)
+        subject.stub(:amount_in_cents).and_return(1000)
         customer.should_receive(:debit).
                  with(hash_including(amount: 1000)).
                  and_return(debit)

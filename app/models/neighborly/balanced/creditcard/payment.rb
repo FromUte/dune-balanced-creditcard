@@ -8,7 +8,7 @@ module Neighborly::Balanced::Creditcard
     end
 
     def checkout!
-      @debit = @customer.debit(amount:     contribution_amount_in_cents,
+      @debit = @customer.debit(amount:     amount_in_cents,
                                source_uri: @attrs.fetch(:use_card),
                                appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
                                description: debit_description,
@@ -27,7 +27,7 @@ module Neighborly::Balanced::Creditcard
       )
     end
 
-    def contribution_amount_in_cents
+    def amount_in_cents
       (fee_calculator.gross_amount * 100).round
     end
 
