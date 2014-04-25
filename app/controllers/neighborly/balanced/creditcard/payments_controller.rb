@@ -20,36 +20,46 @@ module Neighborly::Balanced::Creditcard
     end
 
     private
-
     def resource
-      @resource ||= Contribution.find(params[:payment].fetch(:contribution_id))
+      @resource ||= if params[:payment][:projects_match_id].present?
+                      Projects::Match.find(params[:payment].fetch(:projects_match_id))
+                    else
+                      Contribution.find(params[:payment].fetch(:contribution_id))
+                    end
     end
 
     def complete_request_with(resource, success)
       status = success ? :success : :fail
+      route_params = [resource.project.permalink, resource.id]
+
       {
         contribution: {
           success: -> do
-            redirect_to main_app.project_contribution_path(
-              resource.project.permalink,
-              resource.id
-            )
+            redirect_to main_app.project_contribution_path(*route_params)
           end,
 
           fail: -> do
             flash.alert = t('.errors.default')
-            redirect_to main_app.edit_project_contribution_path(
-              resource.project.permalink,
-              resource.id
-            )
+            redirect_to main_app.edit_project_contribution_path(*route_params)
+          end
+        },
+        projects_match: {
+          success: -> do
+            redirect_to main_app.project_match_path(*route_params)
+          end,
+
+          fail: -> do
+            flash.alert = t('.errors.default')
+            redirect_to main_app.edit_project_match_path(*route_params)
           end
         }
-      }.fetch(resource.class.name.downcase.to_sym).fetch(status).call
+      }.fetch(resource.class.model_name.singular.to_sym).fetch(status).call
     end
 
     def resource_params
       params.require(:payment).
              permit(:contribution_id,
+                    :projects_match_id,
                     :use_card,
                     :pay_fee,
                     user: {})

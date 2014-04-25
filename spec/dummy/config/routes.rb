@@ -3,5 +3,6 @@ Rails.application.routes.draw do
 
   resources :projects do
     resources :contributions
+    resources :matches
   end
 end
