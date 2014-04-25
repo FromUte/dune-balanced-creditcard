@@ -2,7 +2,11 @@
 
 .neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-balanced-marketplace-id=@balanced_marketplace_id]
   = simple_form_for :payment, url: payments_path, html: { novalidate: '' } do |f|
-    = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
+    - if params[:projects_match_id].present?
+      = f.input :projects_match_id, as: :hidden, input_html: { value: params[:projects_match_id] }
+    - else
+      = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
+
     = f.input :pay_fee, as: :hidden, input_html: { value: 1, 'data-pay-payment-fee' => '' }
     section.highlighted[class="#{'use-existing-item' if @cards.any?}"]
       - if @cards.any?
