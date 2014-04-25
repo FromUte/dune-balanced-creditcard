@@ -55,7 +55,7 @@ module Neighborly::Balanced::Creditcard
 
     private
     def resource_name
-      resource.class.name.downcase
+      resource.class.model_name.singular
     end
 
     def debit_description

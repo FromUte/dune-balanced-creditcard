@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Neighborly::Balanced::Creditcard::Payment do
-  shared_examples_for 'behave as payable' do
+  shared_examples_for 'payable' do
     let(:customer)     { double('::Balanced::Customer') }
     let(:debit)        { double('::Balanced::Debit').as_null_object }
     let(:attributes)   { { use_card: 'my-new-card' } }
@@ -22,6 +22,7 @@ describe Neighborly::Balanced::Creditcard::Payment do
         double('BalancedContributor', uri: 'project-owner-uri'))
 
       described_class.any_instance.stub(:meta).and_return({})
+      resource.stub(:value).and_return(1234)
     end
 
     describe 'amount in cents' do
@@ -122,7 +123,7 @@ describe Neighborly::Balanced::Creditcard::Payment do
         it 'defines description on debit' do
           resource.stub_chain(:project, :name).and_return('Awesome Project')
           customer.should_receive(:debit).
-                   with(hash_including(description: 'Contribution to Awesome Project')).
+                   with(hash_including(description: debit_description)).
                    and_return(debit)
           subject.checkout!
         end
@@ -189,8 +190,17 @@ describe Neighborly::Balanced::Creditcard::Payment do
     end
   end
 
-  context 'when resource is a contribution' do
-    let(:resource) { mock_model('Contribution', value: 1234).as_null_object }
-    it_should_behave_like 'behave as payable'
+  context 'when resource is Contribution' do
+    let(:resource)          { Contribution.new }
+    let(:debit_description) { 'Contribution to Awesome Project' }
+
+    it_should_behave_like 'payable'
+  end
+
+  context 'when resource is Projects::Match' do
+    let(:resource)          { Projects::Match.new }
+    let(:debit_description) { 'Match for Awesome Project' }
+
+    it_should_behave_like 'payable'
   end
 end
