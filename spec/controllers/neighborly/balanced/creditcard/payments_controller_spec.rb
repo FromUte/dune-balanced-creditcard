@@ -14,7 +14,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     ::Balanced::Customer.stub(:new).and_return(customer)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
-    Neighborly::Balanced::Payment.any_instance.stub(:meta).and_return({})
+    Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:meta).and_return({})
   end
 
   describe "GET 'new'" do
@@ -33,7 +33,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     let(:user)         { double('User', balanced_contributor: double('BalancedContributor', uri: 'project-owner-uri')) }
     let(:project)      { double('Project', permalink: 'thirty-three', user: user).as_null_object }
     let(:contribution) do
-      double('Contribution', model_name: 'Contribution',
+      mock_model('Contribution', model_name: 'Contribution',
                              id:         42,
                              project:    project).as_null_object
     end
@@ -48,7 +48,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     end
 
     before do
-      Neighborly::Balanced::Payment.any_instance.stub(:project_owner_customer).
+      Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:project_owner_customer).
         and_return(double('::Balanced::Customer', uri: 'project-owner-uri'))
     end
 
@@ -58,21 +58,21 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     end
 
     it "generates new payment with given params" do
-      Neighborly::Balanced::Payment.should_receive(:new).
+      Neighborly::Balanced::Creditcard::Payment.should_receive(:new).
                                     with(anything, customer, an_instance_of(Contribution), params['payment']).
                                     and_return(double('Payment').as_null_object)
       post :create, params
     end
 
     it "generates new payment with engine's name given" do
-      Neighborly::Balanced::Payment.should_receive(:new).
+      Neighborly::Balanced::Creditcard::Payment.should_receive(:new).
                                     with('balanced-creditcard', anything, anything, anything).
                                     and_return(double('Payment').as_null_object)
       post :create, params
     end
 
     it "checkouts payment of contribution" do
-      Neighborly::Balanced::Payment.any_instance.should_receive(:checkout!)
+      Neighborly::Balanced::Creditcard::Payment.any_instance.should_receive(:checkout!)
       post :create, params
     end
 
@@ -117,7 +117,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
 
     context "with successul checkout" do
       before do
-        Neighborly::Balanced::Payment.any_instance.
+        Neighborly::Balanced::Creditcard::Payment.any_instance.
                                       stub(:successful?).
                                       and_return(true)
       end
@@ -131,7 +131,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
 
     context "with unsuccessul checkout" do
       before do
-        Neighborly::Balanced::Payment.any_instance.
+        Neighborly::Balanced::Creditcard::Payment.any_instance.
                                       stub(:successful?).
                                       and_return(false)
       end
