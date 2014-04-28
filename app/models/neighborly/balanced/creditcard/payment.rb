@@ -1,46 +1,48 @@
 module Neighborly::Balanced::Creditcard
   class Payment
-    def initialize(engine_name, customer, contribution, attrs = {})
+    attr_reader :engine_name, :customer, :resource, :attrs
+
+    def initialize(engine_name, customer, resource, attrs = {})
       @engine_name  = engine_name
       @customer     = customer
-      @contribution = contribution
+      @resource     = resource
       @attrs        = attrs
     end
 
     def checkout!
-      @debit = @customer.debit(amount:     contribution_amount_in_cents,
-                               source_uri: @attrs.fetch(:use_card),
-                               appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
-                               description: debit_description,
-                               on_behalf_of_uri: project_owner_customer.uri,
-                               meta: meta)
+      @debit = customer.debit(amount:     amount_in_cents,
+                              source_uri: attrs.fetch(:use_card),
+                              appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
+                              description: debit_description,
+                              on_behalf_of_uri: project_owner_customer.uri,
+                              meta: meta)
     rescue Balanced::PaymentRequired
-      @contribution.cancel!
+      resource.cancel!
     else
-      @contribution.confirm!
+      resource.confirm!
     ensure
-      @contribution.update_attributes(
+      resource.update_attributes(
         payment_id:                       @debit.try(:id),
-        payment_method:                   @engine_name,
+        payment_method:                   engine_name,
         payment_service_fee:              fee_calculator.fees,
-        payment_service_fee_paid_by_user: @attrs[:pay_fee]
+        payment_service_fee_paid_by_user: attrs[:pay_fee]
       )
     end
 
-    def contribution_amount_in_cents
+    def amount_in_cents
       (fee_calculator.gross_amount * 100).round
     end
 
     def fee_calculator
       @fee_calculator and return @fee_calculator
 
-      calculator_class = if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include? @attrs[:pay_fee]
+      calculator_class = if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include? attrs[:pay_fee]
                            TransactionAdditionalFeeCalculator
                          else
                            TransactionInclusiveFeeCalculator
                          end
 
-      @fee_calculator = calculator_class.new(@contribution.value)
+      @fee_calculator = calculator_class.new(resource.value)
     end
 
     def debit
@@ -52,42 +54,53 @@ module Neighborly::Balanced::Creditcard
     end
 
     private
+    def resource_name
+      resource.class.name.downcase
+    end
+
     def debit_description
-      I18n.t('neighborly.balanced.creditcard.payments.dedit.description',
-             project_name: @contribution.try(:project).try(:name))
+      I18n.t('description',
+             project_name: resource.try(:project).try(:name),
+             scope: "neighborly.balanced.creditcard.payments.debit.#{resource_name}")
     end
 
     def project_owner_customer
       @project_owner_customer ||= Neighborly::Balanced::Customer.new(
-        @contribution.project.user, {}).fetch
+        resource.project.user, {}).fetch
     end
 
     def meta
-      {
-        payment_service_fee: fee_calculator.fees,
-        payment_service_fee_paid_by_user: @attrs[:pay_fee],
-        project: {
-          id:        @contribution.project.id,
-          name:      @contribution.project.name,
-          permalink: @contribution.project.permalink,
-          user:      @contribution.project.user.id
-        },
-        user: {
-          id:        @contribution.user.id,
-          name:      @contribution.user.display_name,
-          email:     @contribution.user.email,
-          address:   { line1:        @contribution.user.address_street,
-                       city:         @contribution.user.address_city,
-                       state:        @contribution.user.address_state,
-                       postal_code:  @contribution.user.address_zip_code
-          }
-        },
-        reward: {
-          id:          @contribution.reward.try(:id),
-          title:       @contribution.reward.try(:title),
-          description: @contribution.reward.try(:description)
-        }
-      }
+      meta = {
+              payment_service_fee: fee_calculator.fees,
+              payment_service_fee_paid_by_user: attrs[:pay_fee],
+              project: {
+                id:        resource.project.id,
+                name:      resource.project.name,
+                permalink: resource.project.permalink,
+                user:      resource.project.user.id
+              },
+              user: {
+                id:        resource.user.id,
+                name:      resource.user.display_name,
+                email:     resource.user.email,
+                address:   { line1:        resource.user.address_street,
+                             city:         resource.user.address_city,
+                             state:        resource.user.address_state,
+                             postal_code:  resource.user.address_zip_code
+                }
+              }
+            }
+      if resource_name == 'contribution'
+        meta.merge!({
+          reward: {
+                id:          resource.reward.try(:id),
+                title:       resource.reward.try(:title),
+                description: resource.reward.try(:description)
+              }
+          })
+      end
+
+      meta
     end
   end
 end
