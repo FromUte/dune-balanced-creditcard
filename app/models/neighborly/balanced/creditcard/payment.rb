@@ -88,11 +88,6 @@ module Neighborly::Balanced::Creditcard
                              state:        resource.user.address_state,
                              postal_code:  resource.user.address_zip_code
                 }
-              },
-              reward: {
-                id:          resource.reward.try(:id),
-                title:       resource.reward.try(:title),
-                description: resource.reward.try(:description)
               }
             }
       if resource_name == 'contribution'
