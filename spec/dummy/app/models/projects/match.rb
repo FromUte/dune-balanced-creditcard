@@ -1,5 +1,4 @@
-# Dummy class to be stubbed
-class Contribution
+class Projects::Match
   extend ActiveModel::Naming
 
   def self.find(*)
