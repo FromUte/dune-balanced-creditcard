@@ -16,7 +16,7 @@ module Neighborly::Balanced::Creditcard
                              resource,
                              resource_params)
       payment.checkout!
-      complete_request_with(resource, payment.successful?)
+      redirect_to(*checkout_response_params(resource, payment.successful?))
     end
 
     private
@@ -28,32 +28,34 @@ module Neighborly::Balanced::Creditcard
                     end
     end
 
-    def complete_request_with(resource, success)
-      status = success ? :success : :fail
+    def resource_name
+      resource.class.model_name.singular.to_sym
+    end
+
+    def checkout_response_params(resource, success)
+      status = success ? :succeeded : :failed
       route_params = [resource.project.permalink, resource.id]
 
       {
         contribution: {
-          success: -> do
-            redirect_to main_app.project_contribution_path(*route_params)
-          end,
-
-          fail: -> do
-            flash.alert = t('.errors.default')
-            redirect_to main_app.edit_project_contribution_path(*route_params)
-          end
+          succeeded: [
+            main_app.project_contribution_path(*route_params)
+          ],
+          failed: [
+            main_app.edit_project_contribution_path(*route_params),
+            alert: t('.errors.default')
+          ]
         },
         projects_match: {
-          success: -> do
-            redirect_to main_app.project_match_path(*route_params)
-          end,
-
-          fail: -> do
-            flash.alert = t('.errors.default')
-            redirect_to main_app.edit_project_match_path(*route_params)
-          end
+          succeeded: [
+            main_app.project_match_path(*route_params)
+          ],
+          failed: [
+            main_app.edit_project_match_path(*route_params),
+            alert: t('.errors.default')
+          ]
         }
-      }.fetch(resource.class.model_name.singular.to_sym).fetch(status).call
+      }.fetch(resource_name).fetch(status)
     end
 
     def resource_params
