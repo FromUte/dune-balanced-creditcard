@@ -1,4 +1,4 @@
-class Projects::Match
+class Match
   extend ActiveModel::Naming
 
   def self.find(*)

@@ -6,7 +6,7 @@ en:
           debit:
             contribution:
               description: 'Contribution to %{project_name}'
-            projects_match:
+            match:
               description: 'Match for %{project_name}'
           new:
             card:

@@ -2,8 +2,8 @@
 
 .neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-balanced-marketplace-id=@balanced_marketplace_id]
   = simple_form_for :payment, url: payments_path, html: { novalidate: '' } do |f|
-    - if params[:projects_match_id].present?
-      = f.input :projects_match_id, as: :hidden, input_html: { value: params[:projects_match_id] }
+    - if params[:match_id].present?
+      = f.input :match_id, as: :hidden, input_html: { value: params[:match_id] }
     - else
       = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
 

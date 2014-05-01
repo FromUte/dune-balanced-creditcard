@@ -197,8 +197,8 @@ describe Neighborly::Balanced::Creditcard::Payment do
     it_should_behave_like 'payable'
   end
 
-  context 'when resource is Projects::Match' do
-    let(:resource)          { Projects::Match.new }
+  context 'when resource is Match' do
+    let(:resource)          { Match.new }
     let(:debit_description) { 'Match for Awesome Project' }
 
     it_should_behave_like 'payable'

@@ -38,9 +38,9 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
       it_should_behave_like '#new'
     end
 
-    context 'when params is projects_match_id' do
+    context 'when params is match_id' do
       let(:params) do
-        { projects_match_id: 42 }
+        { match_id: 42 }
       end
 
       it_should_behave_like '#new'
@@ -178,8 +178,8 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     end
 
     context 'when resource is Projects::Match' do
-      let(:resource)           { Projects::Match.new }
-      let(:resource_id_name)   { 'projects_match_id' }
+      let(:resource)           { Match.new }
+      let(:resource_id_name)   { 'match_id' }
       let(:resource_path)      { '/projects/thirty-three/matches/42' }
       let(:edit_resource_path) { '/projects/thirty-three/matches/42/edit' }
 
