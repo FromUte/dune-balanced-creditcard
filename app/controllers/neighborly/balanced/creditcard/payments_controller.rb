@@ -21,8 +21,8 @@ module Neighborly::Balanced::Creditcard
 
     private
     def resource
-      @resource ||= if params[:payment][:projects_match_id].present?
-                      Projects::Match.find(params[:payment].fetch(:projects_match_id))
+      @resource ||= if params[:payment][:match_id].present?
+                      Match.find(params[:payment].fetch(:match_id))
                     else
                       Contribution.find(params[:payment].fetch(:contribution_id))
                     end
@@ -46,7 +46,7 @@ module Neighborly::Balanced::Creditcard
             alert: t('.errors.default')
           ]
         },
-        projects_match: {
+        match: {
           succeeded: [
             main_app.project_match_path(*route_params)
           ],
@@ -61,7 +61,7 @@ module Neighborly::Balanced::Creditcard
     def resource_params
       params.require(:payment).
              permit(:contribution_id,
-                    :projects_match_id,
+                    :match_id,
                     :use_card,
                     :pay_fee,
                     user: {})
