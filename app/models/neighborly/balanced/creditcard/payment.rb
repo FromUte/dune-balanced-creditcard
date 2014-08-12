@@ -14,7 +14,6 @@ module Neighborly::Balanced::Creditcard
                               source_uri: attrs.fetch(:use_card),
                               appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
                               description: debit_description,
-                              on_behalf_of_uri: project_owner_customer.uri,
                               meta: meta)
     rescue Balanced::PaymentRequired
       resource.cancel!

@@ -128,13 +128,6 @@ describe Neighborly::Balanced::Creditcard::Payment do
           subject.checkout!
         end
 
-        it 'defines on_behalf_of_uri on debit' do
-          customer.should_receive(:debit).
-                   with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
-                   and_return(debit)
-          subject.checkout!
-        end
-
         it 'defines meta on debit' do
           described_class.any_instance.stub(:meta).and_return({ payment_service_fee: 5.0 })
           customer.should_receive(:debit).
