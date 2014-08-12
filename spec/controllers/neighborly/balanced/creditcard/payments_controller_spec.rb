@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Neighborly::Balanced::Creditcard::PaymentsController do
   routes { Neighborly::Balanced::Creditcard::Engine.routes }
   let(:current_user) { double('User').as_null_object }
+  let(:debit)        { double('::Balanced::Debit').as_null_object }
+
   let(:customer) do
     double('::Balanced::Customer',
            cards: [],
@@ -19,7 +21,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Balanced::Card.stub(:fetch).and_return(card)
-    card.stub(:debit)
+    card.stub(:debit).and_return(debit)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
     Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:meta).and_return({})
