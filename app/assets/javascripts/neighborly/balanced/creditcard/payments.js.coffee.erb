@@ -10,9 +10,7 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
     _.bindAll(this, 'submit', 'submitToBalanced', 'toggleAddNewCard', 'toggleSelected')
     this.Flash = Neighborly.Neighborly.Balanced.Creditcard.Flash
 
-    $.getScript 'https://js.balancedpayments.com/v1/balanced.js', ->
-      balancedMarketplaceID = $('[data-balanced-credit-card-form]').attr('data-balanced-marketplace-id')
-      balanced.init("/v1/marketplaces/#{balancedMarketplaceID}")
+    $.getScript 'https://js.balancedpayments.com/1.1/balanced.js'
 
     this.$button = this.$('input[type=submit]')
     this.$('form').bind('submit', this.submit)
@@ -35,16 +33,17 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
     $.rails.disableFormElements(that.$el)
 
     creditCardData =
-      card_number:      this.$('#payment_card_number').val()
+      number:           this.$('#payment_card_number').val()
       expiration_month: this.$('#payment_expiration_month').val()
       expiration_year:  this.$('#payment_expiration_year').val()
-      security_code:    this.$('#payment_security_code').val()
+      cvv:              this.$('#payment_security_code').val()
       name:             this.$('#payment_user_name').val()
-      postal_code:      this.$('#payment_user_address_zip_code').val()
-      country_code:     'USA'
+      address:
+        postal_code:      this.$('#payment_user_address_zip_code').val()
+        country_code:     'USA'
 
     balanced_callback_for_201 = (response) ->
-      selectedCard.val(response.data.uri)
+      selectedCard.val(response.cards[0].href)
       that.$('[data-balanced-credit-card-input]').val('')
       that.$('form').submit()
       that.Flash.remove()
@@ -64,7 +63,7 @@ Neighborly.Neighborly.Balanced.Creditcard.Payments.New = Backbone.View.extend
       that.Flash.message('<%= I18n.t("#{i18n_scope}.balanced") %>')
 
     balanced.card.create creditCardData, (response) ->
-      switch response.status
+      switch response.status_code
         when 201 then balanced_callback_for_201(response)
         when 400 then balanced_callback_for_400(response)
         when 402 then balanced_callback_for_402(response)

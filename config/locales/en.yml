@@ -20,7 +20,7 @@ en:
             cards:
               title: 'Stored Cards'
               add_new_card: 'Add a new card'
-              card_ending_in: '%{brand} xxxxxxxxxxxx%{last_four}'
+              card_ending_in: '%{brand} %{number}'
               expiration: 'Expiration:'
             errors:
               invalid_card: 'Sorry, card error. Please review and try again.'

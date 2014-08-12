@@ -1,6 +1,6 @@
 = initjs_tag app_name: 'Neighborly', partial: true
 
-.neighborly-balanced-creditcard-form[data-balanced-credit-card-form data-balanced-marketplace-id=@balanced_marketplace_id]
+.neighborly-balanced-creditcard-form[data-balanced-credit-card-form]
   = simple_form_for :payment, url: payments_path, html: { novalidate: '' } do |f|
     - if params[:match_id].present?
       = f.input :match_id, as: :hidden, input_html: { value: params[:match_id] }
@@ -20,10 +20,10 @@
                 label.row
                   dl
                     .large-1.columns
-                      = f.radio_button :use_card, card.uri, { checked: index.zero?, label: false }
+                      = f.radio_button :use_card, card.href, { checked: index.zero?, label: false }
                     .large-6.columns
                       dt.hide
-                      dd = t('.cards.card_ending_in', brand: card.brand, last_four: card.last_four)
+                      dd = t('.cards.card_ending_in', brand: card.brand, number: card.number)
                     .large-5.columns.expiration
                       dt = t('.cards.expiration')
                       dd = sprintf('%02i/%i', card.expiration_month, card.expiration_year)

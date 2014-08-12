@@ -3,8 +3,7 @@ module Neighborly::Balanced::Creditcard
     before_filter :authenticate_user!
 
     def new
-      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @cards                   = customer.cards
+      @cards = customer.cards
     end
 
     def create
