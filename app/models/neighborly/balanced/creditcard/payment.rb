@@ -10,11 +10,11 @@ module Neighborly::Balanced::Creditcard
     end
 
     def checkout!
-      @debit = customer.debit(amount:     amount_in_cents,
-                              source_uri: attrs.fetch(:use_card),
-                              appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
-                              description: debit_description,
-                              meta: meta)
+      card = Balanced::Card.fetch(attrs.fetch(:use_card))
+      @debit = card.debit(amount: amount_in_cents,
+                          appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
+                          description: debit_description,
+                          meta: meta)
     rescue Balanced::PaymentRequired
       resource.cancel!
     else
