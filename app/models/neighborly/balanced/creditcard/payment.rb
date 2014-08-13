@@ -10,12 +10,11 @@ module Neighborly::Balanced::Creditcard
     end
 
     def checkout!
-      @debit = customer.debit(amount:     amount_in_cents,
-                              source_uri: attrs.fetch(:use_card),
-                              appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
-                              description: debit_description,
-                              on_behalf_of_uri: project_owner_customer.uri,
-                              meta: meta)
+      card = Balanced::Card.fetch(attrs.fetch(:use_card))
+      @debit = card.debit(amount: amount_in_cents,
+                          appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
+                          description: debit_description,
+                          meta: meta)
     rescue Balanced::PaymentRequired
       resource.cancel!
     else
@@ -27,6 +26,7 @@ module Neighborly::Balanced::Creditcard
         payment_service_fee:              fee_calculator.fees,
         payment_service_fee_paid_by_user: attrs[:pay_fee]
       )
+      update_meta(@debit) if @debit
     end
 
     def amount_in_cents
@@ -54,6 +54,12 @@ module Neighborly::Balanced::Creditcard
     end
 
     private
+
+    def update_meta(debit)
+      debit.meta = meta
+      debit.save
+    end
+
     def resource_name
       resource.class.model_name.singular
     end
@@ -70,37 +76,7 @@ module Neighborly::Balanced::Creditcard
     end
 
     def meta
-      meta = {
-              payment_service_fee: fee_calculator.fees,
-              payment_service_fee_paid_by_user: attrs[:pay_fee],
-              project: {
-                id:        resource.project.id,
-                name:      resource.project.name,
-                permalink: resource.project.permalink,
-                user:      resource.project.user.id
-              },
-              user: {
-                id:        resource.user.id,
-                name:      resource.user.display_name,
-                email:     resource.user.email,
-                address:   { line1:        resource.user.address_street,
-                             city:         resource.user.address_city,
-                             state:        resource.user.address_state,
-                             postal_code:  resource.user.address_zip_code
-                }
-              }
-            }
-      if resource.respond_to? :reward
-        meta.merge!({
-          reward: {
-                id:          resource.reward.try(:id),
-                title:       resource.reward.try(:title),
-                description: resource.reward.try(:description)
-              }
-          })
-      end
-
-      meta
+      PayableResourceSerializer.new(resource).to_json
     end
   end
 end

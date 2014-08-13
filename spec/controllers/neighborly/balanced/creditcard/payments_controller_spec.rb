@@ -3,15 +3,25 @@ require 'spec_helper'
 describe Neighborly::Balanced::Creditcard::PaymentsController do
   routes { Neighborly::Balanced::Creditcard::Engine.routes }
   let(:current_user) { double('User').as_null_object }
+  let(:debit)        { double('::Balanced::Debit').as_null_object }
+
   let(:customer) do
     double('::Balanced::Customer',
            cards: [],
-           uri:   '/qwertyuiop').as_null_object
+           href:   '/qwertyuiop').as_null_object
+  end
+
+  let(:card) do
+    double('::Balanced::Card',
+           id:  '443',
+           href: '/cards/443').as_null_object
   end
 
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
+    ::Balanced::Card.stub(:fetch).and_return(card)
+    card.stub(:debit).and_return(debit)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
     Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:meta).and_return({})
@@ -51,7 +61,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     shared_examples_for '#create' do
       let(:user) do
         double('User', balanced_contributor: double('BalancedContributor',
-                                                    uri: 'project-owner-uri'))
+                                                    uri: 'project-owner-href'))
       end
 
       let(:project) do
@@ -73,7 +83,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
         resource.stub(:project).and_return(project)
 
         Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:project_owner_customer).
-          and_return(double('::Balanced::Customer', uri: 'project-owner-uri'))
+          and_return(double('::Balanced::Customer', href: 'project-owner-href'))
       end
 
       it 'should receive authenticate_user!' do
@@ -115,7 +125,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
           end
 
           it 'inserts to customer\'s card list' do
-            expect(customer).to receive(:add_card).with(card.id)
+            expect(card).to receive(:associate_to_customer).with(customer)
             post :create, params
           end
         end
@@ -126,7 +136,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
           end
 
           it 'skips insertion' do
-            expect(customer).to_not receive(:add_card)
+            expect(card).to_not receive(:associate_to_customer)
             post :create, params
           end
         end

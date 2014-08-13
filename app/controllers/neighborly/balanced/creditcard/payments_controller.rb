@@ -3,8 +3,7 @@ module Neighborly::Balanced::Creditcard
     before_filter :authenticate_user!
 
     def new
-      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @cards                   = customer.cards
+      @cards = customer.cards
     end
 
     def create
@@ -68,9 +67,9 @@ module Neighborly::Balanced::Creditcard
     end
 
     def attach_card_to_customer
-      credit_card = resource_params.fetch(:use_card)
-      unless customer.cards.any? { |c| c.id.eql? credit_card }
-        customer.add_card(resource_params.fetch(:use_card))
+      card = Balanced::Card.fetch(resource_params.fetch(:use_card))
+      unless customer.cards.to_a.any? { |c| c.id.eql? card.id }
+        card.associate_to_customer(customer)
       end
     end
 
