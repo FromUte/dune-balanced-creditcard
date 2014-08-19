@@ -10,15 +10,10 @@ module Neighborly::Balanced::Creditcard
     end
 
     def checkout!
-      card = Balanced::Card.fetch(attrs.fetch(:use_card))
-      @debit = card.debit(amount: amount_in_cents,
-                          appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
-                          description: debit_description,
-                          meta: meta)
+      perform_debit!
+      resource.confirm!
     rescue Balanced::PaymentRequired
       resource.cancel!
-    else
-      resource.confirm!
     ensure
       resource.update_attributes(
         payment_id:                       @debit.try(:id),
@@ -54,6 +49,23 @@ module Neighborly::Balanced::Creditcard
     end
 
     private
+
+    def perform_debit!
+      debit_params = {
+        amount:                  amount_in_cents,
+        appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
+        description:             debit_description,
+        meta:                    meta,
+        source:                  card
+      }
+
+      order  = Neighborly::Balanced::OrderProxy.new(resource.project)
+      @debit = order.debit_from(debit_params)
+    end
+
+    def card
+      Balanced::Card.fetch(attrs.fetch(:use_card))
+    end
 
     def update_meta(debit)
       debit.meta = meta

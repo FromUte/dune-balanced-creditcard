@@ -21,7 +21,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Balanced::Card.stub(:fetch).and_return(card)
-    card.stub(:debit).and_return(debit)
+    allow_any_instance_of(Neighborly::Balanced::OrderProxy).to receive(:debit_from).and_return(debit)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
     Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:meta).and_return({})
