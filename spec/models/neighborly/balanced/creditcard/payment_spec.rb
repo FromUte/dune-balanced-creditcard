@@ -59,7 +59,10 @@ describe Neighborly::Balanced::Creditcard::Payment do
         let(:attributes) { { pay_fee: '1', use_card: 'my-new-card' } }
 
         it 'debits customer on selected funding instrument' do
-          card.should_receive(:debit).and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).with(hash_including(source: card)).
+            and_return(debit)
           subject.checkout!
         end
 
@@ -91,15 +94,20 @@ describe Neighborly::Balanced::Creditcard::Payment do
 
         it 'debits customer with amount in cents' do
           subject.stub(:amount_in_cents).and_return(1000)
-          card.should_receive(:debit).
-                   with(hash_including(amount: 1000)).
-                   and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).with(hash_including(amount: 1000)).
+            and_return(debit)
           subject.checkout!
         end
       end
 
       context 'with successful debit' do
-        before { card.stub(:debit).and_return(debit) }
+        before do
+          allow_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).and_return(debit)
+        end
 
         include_examples 'updates resource object'
 
@@ -119,32 +127,41 @@ describe Neighborly::Balanced::Creditcard::Payment do
           ::Configuration.stub(:[]).with(:balanced_appears_on_statement_as).
             and_return('Neighbor.ly')
 
-          card.should_receive(:debit).
-                   with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
-                   and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).
+            with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
+            and_return(debit)
           subject.checkout!
         end
 
         it 'defines description on debit' do
           resource.stub_chain(:project, :name).and_return('Awesome Project')
-          card.should_receive(:debit).
-                   with(hash_including(description: debit_description)).
-                   and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).
+            with(hash_including(description: debit_description)).
+            and_return(debit)
           subject.checkout!
         end
 
         it 'defines meta on debit' do
           described_class.any_instance.stub(:meta).and_return({ payment_service_fee: 5.0 })
-          card.should_receive(:debit).
-                   with(hash_including(meta: { payment_service_fee: 5.0 })).
-                   and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).
+            with(hash_including(meta: { payment_service_fee: 5.0 })).
+            and_return(debit)
           subject.checkout!
         end
       end
 
       context 'when raising Balanced::PaymentRequired exception' do
         before do
-          card.stub(:debit).and_raise(Balanced::PaymentRequired.new({}))
+          allow_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).
+            and_raise(Balanced::PaymentRequired.new({}))
         end
 
         include_examples 'updates resource object'
@@ -158,7 +175,9 @@ describe Neighborly::Balanced::Creditcard::Payment do
 
     describe 'successful state' do
       before do
-        card.stub(:debit).and_return(debit)
+        allow_any_instance_of(
+          Neighborly::Balanced::OrderProxy
+        ).to receive(:debit_from).and_return(debit)
       end
 
       context 'after checkout' do
