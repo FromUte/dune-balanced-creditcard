@@ -8,3 +8,6 @@ before_script:
 
 script:
   - "bundle exec rspec"
+
+notifications:
+  webhooks: https://ci.neighbor.ly/projects/421aaf06-fc95-41a4-9677-701f9c809fc6/status
