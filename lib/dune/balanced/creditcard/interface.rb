@@ -1,4 +1,4 @@
-module Neighborly::Balanced::Creditcard
+module Dune::Balanced::Creditcard
   class Interface
 
     def name
@@ -7,7 +7,7 @@ module Neighborly::Balanced::Creditcard
 
     def payment_path(resource)
       key = "#{ActiveModel::Naming.param_key(resource)}_id"
-      Neighborly::Balanced::Creditcard::Engine.
+      Dune::Balanced::Creditcard::Engine.
         routes.url_helpers.new_payment_path(key => resource)
     end
 
@@ -20,7 +20,7 @@ module Neighborly::Balanced::Creditcard
     end
 
     def payout_class
-      Neighborly::Balanced::Payout
+      Dune::Balanced::Payout
     end
 
   end

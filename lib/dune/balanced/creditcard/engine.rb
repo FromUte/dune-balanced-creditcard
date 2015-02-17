@@ -1,8 +1,8 @@
-module Neighborly
+module Dune
   module Balanced
     module Creditcard
       class Engine < ::Rails::Engine
-        isolate_namespace Neighborly::Balanced::Creditcard
+        isolate_namespace Dune::Balanced::Creditcard
       end
     end
   end

@@ -1,11 +1,9 @@
-# Neighborly::Balanced::Creditcard
-
-[![Build Status](https://travis-ci.org/neighborly/neighborly-balanced-creditcard.png?branch=master)](https://travis-ci.org/neighborly/neighborly-balanced-creditcard) [![Code Climate](https://codeclimate.com/github/neighborly/neighborly-balanced-creditcard.png)](https://codeclimate.com/github/neighborly/neighborly-balanced-creditcard)
+# Dune::Balanced::Creditcard
 
 
 ## What
 
-This is an integration between [Balanced](https://www.balancedpayments.com/) and [Neighbor.ly Donate](https://github.com/neighborly/neighborly-donate), a crowdfunding platform.
+This is an integration between [Balanced](https://www.balancedpayments.com/) and [dune-investissement](https://github.com/FromUte/dune-donate), a crowdfunding platform.
 
 ## How
 
@@ -13,20 +11,20 @@ Include this gem as dependency of your project, adding the following line in you
 
 ```ruby
 # Gemfile
-gem 'neighborly-balanced-creditcard'
+gem 'dune-balanced-creditcard'
 ```
 
-Neighborly::Balanced::Creditcard is a Rails Engine, integrating with your (Neighbor.ly Donate) Rails application with very little of effort. To turn the engine on, mount it in an appropriate route:
+Dune::Balanced::Creditcard is a Rails Engine, integrating with your (dune-investissement) Rails application with very little of effort. To turn the engine on, mount it in an appropriate route:
 
 ```ruby
 # config/routes.rb
-mount Neighborly::Balanced::Creditcard::Engine => '/balanced/creditcard/', as: :neighborly_balanced_creditcard
+mount Dune::Balanced::Creditcard::Engine => '/balanced/creditcard/', as: :dune_balanced_creditcard
 ```
 
 And load our JavaScript:
 
 ```coffeescript
-//= require neighborly-balanced-creditcard
+//= require dune-balanced-creditcard
 ```
 
 ## Contributing

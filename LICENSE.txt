@@ -1,4 +1,4 @@
-Copyright (c) 2014 Josemar Luedke
+Copyright (c) 2014 Legrand Pierre
 
 MIT License
 

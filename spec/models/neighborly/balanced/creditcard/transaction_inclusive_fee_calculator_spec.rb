@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Neighborly::Balanced::Creditcard::TransactionInclusiveFeeCalculator do
+describe Dune::Balanced::Creditcard::TransactionInclusiveFeeCalculator do
   # Float net amount is 971.5257531584064
   let(:transaction_value) { 1000.0 }
   subject { described_class.new(transaction_value) }

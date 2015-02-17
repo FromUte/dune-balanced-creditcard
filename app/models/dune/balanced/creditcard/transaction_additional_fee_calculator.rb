@@ -1,6 +1,6 @@
 require 'float_extensions'
 
-module Neighborly::Balanced::Creditcard
+module Dune::Balanced::Creditcard
   class TransactionAdditionalFeeCalculator < TransactionFeeCalculatorBase
     using FloatExtensions
 

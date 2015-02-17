@@ -1,4 +1,4 @@
-module Neighborly::Balanced::Creditcard
+module Dune::Balanced::Creditcard
   class Payment
     attr_reader :engine_name, :customer, :resource, :attrs
 
@@ -59,7 +59,7 @@ module Neighborly::Balanced::Creditcard
         source:                  card
       }
 
-      order  = Neighborly::Balanced::OrderProxy.new(resource.project)
+      order  = Dune::Balanced::OrderProxy.new(resource.project)
       @debit = order.debit_from(debit_params)
     end
 
@@ -79,11 +79,11 @@ module Neighborly::Balanced::Creditcard
     def debit_description
       I18n.t('description',
              project_name: resource.try(:project).try(:name),
-             scope: "neighborly.balanced.creditcard.payments.debit.#{resource_name}")
+             scope: "dune.balanced.creditcard.payments.debit.#{resource_name}")
     end
 
     def project_owner_customer
-      @project_owner_customer ||= Neighborly::Balanced::Customer.new(
+      @project_owner_customer ||= Dune::Balanced::Customer.new(
         resource.project.user, {}).fetch
     end
 

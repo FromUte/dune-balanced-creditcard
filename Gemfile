@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in neighborly-balanced-creditcard.gemspec
+# Specify your gem's dependencies in dune-balanced-creditcard.gemspec
 gemspec
 
-gem 'neighborly-balanced', github: 'neighborly/neighborly-balanced', branch: :master
+gem 'dune-balanced', github: 'FromUte/dune-balanced', branch: :master

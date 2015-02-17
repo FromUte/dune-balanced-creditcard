@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Neighborly::Balanced::Creditcard::PaymentsController do
-  routes { Neighborly::Balanced::Creditcard::Engine.routes }
+describe Dune::Balanced::Creditcard::PaymentsController do
+  routes { Dune::Balanced::Creditcard::Engine.routes }
   let(:current_user) { double('User').as_null_object }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
 
@@ -21,16 +21,16 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Balanced::Card.stub(:fetch).and_return(card)
-    allow_any_instance_of(Neighborly::Balanced::OrderProxy).to receive(:debit_from).and_return(debit)
+    allow_any_instance_of(Dune::Balanced::OrderProxy).to receive(:debit_from).and_return(debit)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
-    Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:meta).and_return({})
+    Dune::Balanced::Creditcard::Payment.any_instance.stub(:meta).and_return({})
   end
 
   describe 'GET \'new\'' do
     shared_examples_for '#new' do
       it 'should fetch balanced customer' do
-        expect_any_instance_of(Neighborly::Balanced::Customer).to receive(:fetch).and_return(customer)
+        expect_any_instance_of(Dune::Balanced::Customer).to receive(:fetch).and_return(customer)
         get :new, params
       end
 
@@ -82,7 +82,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
         resource.stub(:id).and_return(42)
         resource.stub(:project).and_return(project)
 
-        Neighborly::Balanced::Creditcard::Payment.any_instance.stub(:project_owner_customer).
+        Dune::Balanced::Creditcard::Payment.any_instance.stub(:project_owner_customer).
           and_return(double('::Balanced::Customer', href: 'project-owner-href'))
       end
 
@@ -92,21 +92,21 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
       end
 
       it 'generates new payment with given params' do
-        Neighborly::Balanced::Creditcard::Payment.should_receive(:new).
+        Dune::Balanced::Creditcard::Payment.should_receive(:new).
           with(anything, customer, an_instance_of(resource.class), params['payment']).
           and_return(double('Payment').as_null_object)
         post :create, params
       end
 
       it 'generates new payment with engine\'s name given' do
-        Neighborly::Balanced::Creditcard::Payment.should_receive(:new).
+        Dune::Balanced::Creditcard::Payment.should_receive(:new).
           with('balanced-creditcard', anything, anything, anything).
           and_return(double('Payment').as_null_object)
         post :create, params
       end
 
       it 'checkouts payment of resource' do
-        Neighborly::Balanced::Creditcard::Payment.any_instance.should_receive(:checkout!)
+        Dune::Balanced::Creditcard::Payment.any_instance.should_receive(:checkout!)
         post :create, params
       end
 
@@ -144,14 +144,14 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
 
       describe 'update customer' do
         it 'update user attributes and balanced customer' do
-          expect_any_instance_of(Neighborly::Balanced::Customer).to receive(:update!)
+          expect_any_instance_of(Dune::Balanced::Customer).to receive(:update!)
           post :create, params
         end
       end
 
       context 'with successul checkout' do
         before do
-          Neighborly::Balanced::Creditcard::Payment.any_instance.
+          Dune::Balanced::Creditcard::Payment.any_instance.
                                         stub(:successful?).
                                         and_return(true)
         end
@@ -165,7 +165,7 @@ describe Neighborly::Balanced::Creditcard::PaymentsController do
 
       context 'with unsuccessul checkout' do
         before do
-          Neighborly::Balanced::Creditcard::Payment.any_instance.
+          Dune::Balanced::Creditcard::Payment.any_instance.
                                         stub(:successful?).
                                         and_return(false)
         end

@@ -1,4 +1,4 @@
-module Neighborly::Balanced::Creditcard
+module Dune::Balanced::Creditcard
   class PaymentsController < ActionController::Base
     before_filter :authenticate_user!
 
@@ -74,11 +74,11 @@ module Neighborly::Balanced::Creditcard
     end
 
     def customer
-      @customer ||= Neighborly::Balanced::Customer.new(current_user, params).fetch
+      @customer ||= Dune::Balanced::Customer.new(current_user, params).fetch
     end
 
     def update_customer
-      Neighborly::Balanced::Customer.new(current_user, params).update!
+      Dune::Balanced::Customer.new(current_user, params).update!
     end
   end
 end

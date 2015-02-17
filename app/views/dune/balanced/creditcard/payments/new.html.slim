@@ -1,6 +1,6 @@
-= initjs_tag app_name: 'Neighborly', partial: true
+= initjs_tag app_name: 'Dune', partial: true
 
-.neighborly-balanced-creditcard-form[data-balanced-credit-card-form]
+.dune-balanced-creditcard-form[data-balanced-credit-card-form]
   = simple_form_for :payment, url: payments_path, html: { novalidate: '' } do |f|
     - if params[:match_id].present?
       = f.input :match_id, as: :hidden, input_html: { value: params[:match_id] }

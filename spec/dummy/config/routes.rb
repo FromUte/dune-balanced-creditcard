@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  mount Neighborly::Balanced::Creditcard::Engine => '/', as: :neighborly_balanced_creditcard
+  mount Dune::Balanced::Creditcard::Engine => '/', as: :dune_balanced_creditcard
 
   resources :projects do
     resources :contributions

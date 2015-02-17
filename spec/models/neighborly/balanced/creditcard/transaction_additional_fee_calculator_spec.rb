@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Neighborly::Balanced::Creditcard::TransactionAdditionalFeeCalculator do
+describe Dune::Balanced::Creditcard::TransactionAdditionalFeeCalculator do
   subject { described_class.new(transaction_value) }
 
   context "when gross amount doesn't need more then 2 decimal places of precision" do

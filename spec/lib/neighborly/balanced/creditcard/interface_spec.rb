@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Neighborly::Balanced::Creditcard::Interface do
+describe Dune::Balanced::Creditcard::Interface do
 
   it 'should return the engine name' do
     expect(subject.name).to eq 'balanced-creditcard'
@@ -11,7 +11,7 @@ describe Neighborly::Balanced::Creditcard::Interface do
   end
 
   it 'should return an instance of TransactionAdditionalFeeCalculator' do
-    expect(subject.fee_calculator(10)).to be_an_instance_of(Neighborly::Balanced::Creditcard::TransactionAdditionalFeeCalculator)
+    expect(subject.fee_calculator(10)).to be_an_instance_of(Dune::Balanced::Creditcard::TransactionAdditionalFeeCalculator)
   end
 
   describe '#payment_path' do
@@ -19,7 +19,7 @@ describe Neighborly::Balanced::Creditcard::Interface do
       let(:resource) { mock_model('Contribution', id: 42) }
 
       it 'should return payment path' do
-        expect(subject.payment_path(resource)).to eq Neighborly::Balanced::Creditcard::Engine.
+        expect(subject.payment_path(resource)).to eq Dune::Balanced::Creditcard::Engine.
             routes.url_helpers.new_payment_path(contribution_id: resource)
       end
     end
@@ -28,7 +28,7 @@ describe Neighborly::Balanced::Creditcard::Interface do
       let(:resource) { mock_model('Match', id: 42) }
 
       it 'should return payment path' do
-        expect(subject.payment_path(resource)).to eq Neighborly::Balanced::Creditcard::Engine.
+        expect(subject.payment_path(resource)).to eq Dune::Balanced::Creditcard::Engine.
             routes.url_helpers.new_payment_path(match_id: resource)
       end
     end
